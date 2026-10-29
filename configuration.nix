@@ -55,8 +55,8 @@
     enable = true;
     enableCalendarEvents = false;
   };
-  programs.dsearch.enable = true;
-  programs.dsearch.systemd.enable = true;
+  programs.dux-search.enable = true;
+  programs.dux-search.systemd.enable = true;
   services.fprintd.enable = true;
 
   services.printing.enable = true;
@@ -84,6 +84,7 @@
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   environment.systemPackages = with pkgs; [
+    tealdeer
     bitwarden-cli
     cargo
     efibootmgr

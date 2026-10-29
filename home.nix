@@ -5,15 +5,24 @@
       ./zshrc.nix
       ./niri.nix
       ./ghostty.nix
+      inputs.dux-files.homeModules.dux-files
       ];
 
   programs.rofi.enable = true;
 
+  programs.dux-files = {
+    enable = true;
+    systemd.enable = true;
+    portal.enable = true;
+  };
+
   home.packages = with pkgs; [
+    vesktop
     (discord.override {
       withOpenASAR = true;
       withVencord = true;
     })
+    inputs.prismlauncher.packages.${pkgs.stdenv.hostPlatform.system}.prismlauncher
     topgrade
     papirus-icon-theme
     (writeShellScriptBin "rofi-launcher" ''

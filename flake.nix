@@ -12,7 +12,7 @@
     };
 
     dux-files = {
-      url = "github:AshlynOrSomethin/dfiles-ghostty";
+      url = "github:duxlabs-dev/dux-files";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -44,6 +44,11 @@
     };
 
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    
+    prismlauncher = {
+        url = "github:prismlauncher/PrismLauncher";
+        inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     qylock = {
       url = "github:Darkkal44/qylock";
@@ -72,7 +77,6 @@
         }
         dms.nixosModules.dank-material-shell
         qylock.nixosModules.default
-        dux-files.nixosModules.dux-files
         chaotic.nixosModules.nyx-cache
         chaotic.nixosModules.nyx-overlay
         chaotic.nixosModules.nyx-registry

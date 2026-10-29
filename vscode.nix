@@ -55,6 +55,12 @@ in
           # Looks
           catppuccin.catppuccin-vsc
           catppuccin.catppuccin-vsc-icons
+
+
+	  #SSH
+	  ms-vscode-remote.remote-ssh
+    	  ms-vscode-remote.remote-ssh-edit
+	  ms-vscode.remote-explorer
         ])
         ++ [
           # RPM spec syntax (attribute starts with a digit, so it needs quoting)

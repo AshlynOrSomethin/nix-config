@@ -58,11 +58,6 @@
   programs.dsearch.enable = true;
   programs.dsearch.systemd.enable = true;
   services.fprintd.enable = true;
-  programs.dux-files = {
-    enable = true;
-    systemd.enable = true;   # start with the session so windows open instantly
-    portal.enable = true;    # optional: use it for open/save dialogs
-  };
 
   services.printing.enable = true;
 
@@ -116,6 +111,7 @@
     macchina
     nodejs
     #pinentry-qt
+    python3
     rustc
     wget
     wl-clipboard

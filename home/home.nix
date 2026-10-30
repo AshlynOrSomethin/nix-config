@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 {
   home.stateVersion = "26.05";  # match your NixOS stateVersion
   imports = [
@@ -61,6 +61,10 @@
     };
   };
 
+  home.activation.createScreenshotDirectory = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    run ${pkgs.coreutils}/bin/mkdir -p "${config.home.homeDirectory}/Screenshots"
+  '';
+
   services.flameshot = {
     enable = true;
     settings.General = {
@@ -77,8 +81,6 @@
       uiColor = "#740096";
       contrastUiColor = "#270032";
       drawColor = "#ff0000";
-      useGrimAdapter = true;
-      disabledGrimWarning = true;
     };
   };
 

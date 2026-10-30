@@ -33,6 +33,9 @@
   xdg.configFile = {
     "rofi/launchers/type-7".source = "${inputs.rofi-themes}/files/launchers/type-7";
     "rofi/colors".source           = "${inputs.rofi-themes}/files/colors";
+    "Code/User/settings.json".text = builtins.toJSON {
+      "terminal.integrated.fontFamily" = "'JetBrainsMono Nerd Font'";
+    };
   };
 
   services.udiskie = {

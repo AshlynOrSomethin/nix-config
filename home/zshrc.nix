@@ -48,7 +48,6 @@
     shellAliases = {
       # --- Existing ---
       man = "tldr";
-      rebuild = "cd /etc/nixos && jj commit -m 'Update NixOS configuration' && sudo nix flake update && sudo nixos-rebuild switch --flake /etc/nixos";
       git = "jj git";
       ff = "hyfetch";
       reboot = "systemctl reboot";
@@ -108,6 +107,19 @@
       fi
 
       # --- Custom Shell Functions ---
+      rebuild() (
+        setopt noxtrace noverbose
+        local github_token
+        github_token=$(gh auth token --hostname github.com) || return 1
+        export NIX_CONFIG="''${NIX_CONFIG-}"$'\n'"access-tokens = github.com=$github_token"
+        unset github_token
+
+        cd /etc/nixos &&
+          jj commit -m 'Update NixOS configuration' &&
+          nix flake update &&
+          sudo --preserve-env=NIX_CONFIG nixos-rebuild switch --flake /etc/nixos
+      )
+
       mf() {
         sudo $(fc -ln -1)
       }

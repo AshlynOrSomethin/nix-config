@@ -1,5 +1,15 @@
 { config, pkgs, inputs, ... }:
 
+let
+  gparted = pkgs.gparted.overrideAttrs (old: {
+    preFixup = (old.preFixup or "") + ''
+      gappsWrapperArgs+=(
+        --set GTK_THEME Gruvbox-Dark
+        --prefix XDG_DATA_DIRS : "${pkgs.gruvbox-gtk-theme}/share"
+      )
+    '';
+  });
+in
 {
   imports = [
     ./hardware-configuration.nix
@@ -22,18 +32,6 @@
   security.sudo.enable = false;
   security.sudo-rs.enable = true;
   security.polkit.enablePkexecWrapper = true;
-
-  environment.etc."gtk-3.0/settings.ini".text = ''
-    [Settings]
-    gtk-theme-name=Gruvbox-Dark
-    gtk-application-prefer-dark-theme=true
-  '';
-
-  programs.dconf.profiles.user.databases = [
-    {
-      settings."org/gnome/desktop/interface".gtk-theme = "Gruvbox-Dark";
-    }
-  ];
 
   boot.loader.grub = {
     enable = true;

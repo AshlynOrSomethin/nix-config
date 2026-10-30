@@ -37,7 +37,7 @@
 
     # Aliases
     shellAliases = {
-      rebuild = "cd /etc/nixos && sudo nix flake update && jj commit -m 'Update NixOS configuration' && sudo nixos-rebuild switch --flake /etc/nixos";
+      rebuild = "cd /etc/nixos && jj commit -m 'Update NixOS configuration' && sudo nix flake update && sudo nixos-rebuild switch --flake /etc/nixos";
       git = "jj git";
       ff = "hyfetch";
       reboot = "systemctl reboot";

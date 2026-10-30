@@ -25,7 +25,7 @@
 
   environment.etc."gtk-3.0/settings.ini".text = ''
     [Settings]
-    gtk-theme-name=Adwaita-dark
+    gtk-theme-name=Gruvbox-Dark
     gtk-application-prefer-dark-theme=true
   '';
 
@@ -149,7 +149,6 @@
     python3
     rustc
     qt6Packages.qt6ct
-    gnome-themes-extra
     gparted
     gruvbox-gtk-theme
     wget

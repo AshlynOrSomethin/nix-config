@@ -141,6 +141,7 @@
     python3
     rustc
     qt6Packages.qt6ct
+    gparted
     wget
     wl-clipboard
     xwayland-satellite

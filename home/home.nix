@@ -77,7 +77,7 @@
       showHelp = false;
       showSidePanelButton = true;
       useX11LegacyScreenshot = true;
-      captureActiveMonitor = true;
+      captureActiveMonitor = false;
       uiColor = "#740096";
       contrastUiColor = "#270032";
       drawColor = "#ff0000";

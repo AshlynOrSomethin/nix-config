@@ -1,6 +1,15 @@
 { config, pkgs, lib, ... }:
 
 {
+  # --- Tools that need shell integration ---
+  programs.zoxide.enable = true;        # gives you `z` and `zi`
+  programs.atuin.enable = true;         # takes over Ctrl+R / up-arrow
+  programs.pay-respects.enable = true;  # type `f` after a typo
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+  };
+
   programs.zsh = {
     enable = true;
 
@@ -37,6 +46,7 @@
 
     # Aliases
     shellAliases = {
+      # --- Existing ---
       man = "tldr";
       rebuild = "cd /etc/nixos && jj commit -m 'Update NixOS configuration' && sudo nix flake update && sudo nixos-rebuild switch --flake /etc/nixos";
       git = "jj git";
@@ -47,6 +57,33 @@
       xdg-restart = "systemctl --user restart xdg-desktop-portal-gtk.service xdg-desktop-portal-gnome.service xdg-desktop-portal-wlr.service xdg-desktop-portal.service";
       "xali" = "ssh ashlyn@40.160.23.89";
       "pulsar" = "ssh ashlyn@pulsar.ltd";
+
+      # --- Drop-in replacements ---
+      ls = "lsd";
+      ll = "lsd -l";
+      la = "lsd -la";
+      lt = "lsd --tree";
+      du = "dust";
+      df = "duf";
+      top = "btop";
+      htop = "btop";
+      ps = "procs";
+      ping = "gping";
+      dig = "doggo";
+      http = "xh";
+
+      # --- TUIs ---
+      lg = "lazygit";
+      ld = "lazydocker";
+      sctl = "systemctl-tui";
+
+      # --- NixOS (nh / nvd / nix-tree) ---
+      nrs = "nh os switch /etc/nixos";
+      nrt = "nh os test /etc/nixos";
+      nrb = "nh os boot /etc/nixos";
+      nclean = "nh clean all --keep 5";
+      nixdiff = "nvd diff /run/booted-system /run/current-system";
+      ntree = "nix-tree /run/current-system";
     };
 
     # Early shell startup logic (runs before completions)

@@ -1,4 +1,14 @@
 { config, lib, pkgs, inputs, ... }:
+let
+  satty = pkgs.satty.overrideAttrs (old: {
+    version = "unstable-${inputs.satty.shortRev}";
+    src = inputs.satty;
+    cargoDeps = pkgs.rustPlatform.importCargoLock {
+      lockFile = "${inputs.satty}/Cargo.lock";
+    };
+    checkInputs = (old.checkInputs or []) ++ [ pkgs.libxkbcommon ];
+  });
+in
 {
   home.stateVersion = "26.05";  # match your NixOS stateVersion
   imports = [
@@ -24,7 +34,29 @@
     })
     inputs.prismlauncher.packages.${pkgs.stdenv.hostPlatform.system}.prismlauncher
     topgrade
+    satty
     papirus-icon-theme
+    (writeShellApplication {
+      name = "screenshot-annotate";
+      runtimeInputs = [
+        coreutils
+        inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.dms-shell
+        satty
+      ];
+      text = ''
+        screenshot=$(mktemp --suffix=.png)
+        trap 'rm -f "$screenshot"' EXIT
+
+        dms screenshot --stdout --no-confirm > "$screenshot"
+        if [[ ! -s "$screenshot" ]]; then
+          exit 0
+        fi
+
+        mkdir -p "$HOME/Screenshots"
+        satty --filename "$screenshot" \
+          --output-filename "$HOME/Screenshots/Screenshot-%Y-%m-%d-%H-%M-%S.png"
+      '';
+    })
     (writeShellScriptBin "rofi-launcher" ''
       exec rofi -show drun -theme "$HOME/.config/rofi/launchers/type-7/style-4.rasi"
     '')
@@ -64,25 +96,6 @@
   home.activation.createScreenshotDirectory = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     run ${pkgs.coreutils}/bin/mkdir -p "${config.home.homeDirectory}/Screenshots"
   '';
-
-  services.flameshot = {
-    enable = true;
-    settings.General = {
-      savePath = "${config.home.homeDirectory}/Screenshots";
-      disabledTrayIcon = true;
-      showStartupLaunchMessage = false;
-      saveAsFileExtension = ".png";
-      showDesktopNotification = true;
-      showAbortNotification = false;
-      showHelp = false;
-      showSidePanelButton = true;
-      useX11LegacyScreenshot = true;
-      captureActiveMonitor = false;
-      uiColor = "#740096";
-      contrastUiColor = "#270032";
-      drawColor = "#ff0000";
-    };
-  };
 
   services.udiskie = {
     enable = true;

@@ -65,6 +65,11 @@
       flake = false;
     };
 
+    satty = {
+      url = "github:Satty-org/Satty/main";
+      flake = false;
+    };
+
   };
 
   outputs = { chaotic, dms, dux-files, home-manager, niri, nix-flatpak, nixpkgs, qylock, self, ... }@inputs: {

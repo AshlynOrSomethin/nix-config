@@ -245,7 +245,7 @@
 
         Mod+W { toggle-column-tabbed-display; }
 
-        Print { spawn "flameshot" "gui"; }
+        Print { spawn "screenshot-annotate"; }
         Ctrl+Print { screenshot-screen; }
         Alt+Print { screenshot-window; }
 

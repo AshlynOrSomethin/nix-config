@@ -548,7 +548,8 @@
         "nixpkgs": "nixpkgs_2",
         "prismlauncher": "prismlauncher",
         "qylock": "qylock",
-        "rofi-themes": "rofi-themes"
+        "rofi-themes": "rofi-themes",
+        "satty": "satty"
       }
     },
     "rust-analyzer-src": {
@@ -607,6 +608,23 @@
       "original": {
         "owner": "oxalica",
         "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "satty": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793349198,
+        "narHash": "sha256-PczAwTJ/0NlvmS85NKgxAQ/QhZ8UDggTkQIQeruaNdU=",
+        "owner": "Satty-org",
+        "repo": "Satty",
+        "rev": "ae0214c3ae3768ed19570e88adaa74cf1f1fdc30",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Satty-org",
+        "ref": "main",
+        "repo": "Satty",
         "type": "github"
       }
     },

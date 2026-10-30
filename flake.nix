@@ -6,6 +6,11 @@
     # No nixpkgs.follows here, on purpose, so the kernel patches match the cache.
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
 
+    cosmic-greeter = {
+      url = "github:pop-os/cosmic-greeter";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     dms = {
       url = "github:AvengeMedia/DankMaterialShell/stable";
       inputs.nixpkgs.follows = "nixpkgs";

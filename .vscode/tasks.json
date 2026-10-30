@@ -1,0 +1,12 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "NixOS rebuild switch",
+			"type": "shell",
+			"command": "sudo nixos-rebuild switch --flake /etc/nixos#nixos",
+			"isBackground": false,
+			"problemMatcher": []
+		}
+	]
+}

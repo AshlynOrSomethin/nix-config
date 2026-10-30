@@ -21,6 +21,27 @@
         "type": "github"
       }
     },
+    "cosmic-greeter": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "rust-overlay": "rust-overlay"
+      },
+      "locked": {
+        "lastModified": 1793301216,
+        "narHash": "sha256-y0pKu/dotGqpXzkpO7TsQ9b5qe91w4sg37i5CC27faE=",
+        "owner": "pop-os",
+        "repo": "cosmic-greeter",
+        "rev": "84a04d3e5563d242b925022df4d2a39ab84984ec",
+        "type": "github"
+      },
+      "original": {
+        "owner": "pop-os",
+        "repo": "cosmic-greeter",
+        "type": "github"
+      }
+    },
     "crane": {
       "locked": {
         "lastModified": 1792350552,
@@ -55,11 +76,11 @@
     "dank-qml-common_2": {
       "flake": false,
       "locked": {
-        "lastModified": 1793224384,
-        "narHash": "sha256-mJaCE9rdBd/HyYSCPomQM/uX+1YNmFfV64bMIdUSiL0=",
+        "lastModified": 1793330030,
+        "narHash": "sha256-AOQTOSVGHmTkFGN8b9omNg5uKZE+RwIcvtkvEBxEJeU=",
         "owner": "duxlabs-dev",
         "repo": "dux-qml-common",
-        "rev": "09ac4aba511f10636c273e11028fe092196c78ba",
+        "rev": "604ba61ee559f5f6c6dc7e78f9fb8e004a54e686",
         "type": "github"
       },
       "original": {
@@ -99,11 +120,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793298929,
-        "narHash": "sha256-sSFAN1vsOh2O4UfZe1APtJpulVBb1tcEH8RbnDne69M=",
+        "lastModified": 1793331460,
+        "narHash": "sha256-iTpq1Pdlz1WBmjK2MM39ATZsysCnuQWDFu4lopCf7Ho=",
         "owner": "duxlabs-dev",
         "repo": "dux-files",
-        "rev": "94194da7ad4ca5eb79d0730886235d4011679f43",
+        "rev": "aff7090b5b27349845934ce6962a53a669f4e2cb",
         "type": "github"
       },
       "original": {
@@ -261,11 +282,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793313107,
-        "narHash": "sha256-+34qwpJfBmozGi5ow5+csiY0J2R8Is9KLjs9a08lQTE=",
+        "lastModified": 1793345362,
+        "narHash": "sha256-A8Yje01WZtqU4OhaC5RXJRjzrFTxckHhzKKJxQ5nejQ=",
         "owner": "sinelaw",
         "repo": "fresh",
-        "rev": "f40b4afec3209d175f0f63dcd78230405289694c",
+        "rev": "3747e162ab03ff3f661eee12e3ec5f5fa4a68c2b",
         "type": "github"
       },
       "original": {
@@ -321,14 +342,14 @@
         "nixpkgs": [
           "nixpkgs"
         ],
-        "rust-overlay": "rust-overlay"
+        "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1793292769,
-        "narHash": "sha256-OeJ6R9WBlhkN/uAzAJ+PUPq01sQEdA+gg4dt3Hxz2kA=",
+        "lastModified": 1793341154,
+        "narHash": "sha256-MmvZbTo2OzTmud4pD+u/VEmKKP1pU3yprjbRyn6k9c4=",
         "owner": "jj-vcs",
         "repo": "jj",
-        "rev": "4a490231f28acd11fbc0e1ba8dfc430b6c7bad1c",
+        "rev": "4b659baa60b80c062277fe2bdcc7f56102ca2f41",
         "type": "github"
       },
       "original": {
@@ -360,11 +381,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793091370,
-        "narHash": "sha256-PM8tinYBMFRZfRkOiRZPbgBdDK0tMlsqpeupa2b8CcU=",
+        "lastModified": 1793340996,
+        "narHash": "sha256-Vf+Ea6sgZ2fn+NU1m0wtIl6MJIOyXZ2BBlwd/HDYKio=",
         "owner": "niri-wm",
         "repo": "niri",
-        "rev": "fcbc971cf49a987b1e8d5ff1d64da6b1f61a1787",
+        "rev": "b22eb842ca9506d4e2ff997b116031cdb3f650f8",
         "type": "github"
       },
       "original": {
@@ -396,11 +417,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793250809,
-        "narHash": "sha256-GArU139XmBF91IKUsU6a6mB1XsiMKmjU1eP65gT4g14=",
+        "lastModified": 1793337500,
+        "narHash": "sha256-r5ZNgu58In9a700Ov3BdozWjx9r968jiIG0Ypk/Sud8=",
         "owner": "nix-community",
         "repo": "nix-vscode-extensions",
-        "rev": "d2e0e8f406bc7bdee11473154f81cd6ea41151a7",
+        "rev": "fbcca350aef2cf06e98624be6cd8d7148305c7b7",
         "type": "github"
       },
       "original": {
@@ -515,6 +536,7 @@
     "root": {
       "inputs": {
         "chaotic": "chaotic",
+        "cosmic-greeter": "cosmic-greeter",
         "dms": "dms",
         "dux-files": "dux-files",
         "fresh": "fresh",
@@ -547,6 +569,27 @@
       }
     },
     "rust-overlay": {
+      "inputs": {
+        "nixpkgs": [
+          "cosmic-greeter",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1788851328,
+        "narHash": "sha256-YOwlUD0Lt/3SulKhZ7z0Jmgbq/DWh8SjnGwUlFSw+YM=",
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "rev": "6ae57a71bcb0bebc7a66cc2bd76942c4cf649167",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "rust-overlay_2": {
       "inputs": {
         "nixpkgs": [
           "jj",

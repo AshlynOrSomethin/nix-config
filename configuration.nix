@@ -36,10 +36,15 @@
 
   i18n.defaultLocale = "en_US.UTF-8";
 
-  services.displayManager.sddm.enable = true;
-  services.displayManager.sddm.wayland.enable = true;
+  services.displayManager.cosmic-greeter = {
+    enable = true;
+    package = inputs.cosmic-greeter.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
+      # The installer requires the daemon binary from the Cargo workspace.
+      cargoBuildFlags = (old.cargoBuildFlags or []) ++ [ "--workspace" ];
+    });
+  };
   services.gnome.gnome-keyring.enable = true;
-  security.pam.services.sddm.enableGnomeKeyring = true;
+  security.pam.services.cosmic-greeter.enableGnomeKeyring = true;
   services.udisks2.enable = true;
 
   programs.nix-ld.enable = true;

@@ -3,7 +3,7 @@
   home.stateVersion = "26.05";  # match your NixOS stateVersion
   imports = [
       ./zshrc.nix
-      ./niri.nix
+      ../niri.nix
       ./ghostty.nix
       inputs.dux-files.homeModules.dux-files
       ];

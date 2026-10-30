@@ -4,8 +4,8 @@
   imports = [
     ./hardware-configuration.nix
     ./fonts.nix
-    ./flatpak.nix
-    ./vscode.nix    
+    ./home/flatpak.nix
+    ./home/vscode.nix    
   ];
 
   nixpkgs.overlays = [ (final: prev: {

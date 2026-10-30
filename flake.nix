@@ -77,7 +77,7 @@
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.extraSpecialArgs = { inherit inputs; };
-          home-manager.users.ashlyn = import ./home.nix;
+          home-manager.users.ashlyn = import ./home/home.nix;
           home-manager.backupFileExtension = "bak";
         }
         dms.nixosModules.dank-material-shell

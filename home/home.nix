@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }:
+{ config, pkgs, inputs, ... }:
 {
   home.stateVersion = "26.05";  # match your NixOS stateVersion
   imports = [
@@ -58,6 +58,27 @@
         "terminal.ansiBrightCyan" = "#9ad4e0";
         "terminal.ansiBrightWhite" = "#8c91fa";
       };
+    };
+  };
+
+  services.flameshot = {
+    enable = true;
+    settings.General = {
+      savePath = "${config.home.homeDirectory}/Screenshots";
+      disabledTrayIcon = true;
+      showStartupLaunchMessage = false;
+      saveAsFileExtension = ".png";
+      showDesktopNotification = true;
+      showAbortNotification = false;
+      showHelp = false;
+      showSidePanelButton = true;
+      useX11LegacyScreenshot = true;
+      captureActiveMonitor = true;
+      uiColor = "#740096";
+      contrastUiColor = "#270032";
+      drawColor = "#ff0000";
+      useGrimAdapter = true;
+      disabledGrimWarning = true;
     };
   };
 

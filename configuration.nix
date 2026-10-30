@@ -149,6 +149,8 @@ in
     lunar-client
     macchina
     nodejs
+    grim
+    flameshot
     #pinentry-qt
     python3
     rustc

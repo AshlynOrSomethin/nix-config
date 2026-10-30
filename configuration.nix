@@ -140,6 +140,7 @@
     #pinentry-qt
     python3
     rustc
+    qt6Packages.qt6ct
     wget
     wl-clipboard
     xwayland-satellite

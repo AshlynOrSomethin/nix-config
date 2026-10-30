@@ -35,6 +35,7 @@
     "rofi/colors".source           = "${inputs.rofi-themes}/files/colors";
     "Code/User/settings.json".text = builtins.toJSON {
       "terminal.integrated.fontFamily" = "'JetBrainsMono Nerd Font'";
+      "workbench.colorTheme" = "Modern Purple Theme Dark";
     };
   };
 

@@ -55,6 +55,7 @@ in
           # Looks
           catppuccin.catppuccin-vsc
           catppuccin.catppuccin-vsc-icons
+          nataliefruitema.modern-purple-theme
 
 
 	  #SSH

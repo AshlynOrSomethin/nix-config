@@ -29,6 +29,12 @@
     gtk-application-prefer-dark-theme=true
   '';
 
+  programs.dconf.profiles.user.databases = [
+    {
+      settings."org/gnome/desktop/interface".gtk-theme = "Gruvbox-Dark";
+    }
+  ];
+
   boot.loader.grub = {
     enable = true;
     efiSupport = true;

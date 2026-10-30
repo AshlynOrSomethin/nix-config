@@ -23,6 +23,11 @@
   security.sudo-rs.enable = true;
   security.polkit.enablePkexecWrapper = true;
 
+  environment.etc."gtk-3.0/settings.ini".text = ''
+    [Settings]
+    gtk-application-prefer-dark-theme=true
+  '';
+
   boot.loader.grub = {
     enable = true;
     efiSupport = true;

@@ -36,6 +36,28 @@
     "Code/User/settings.json".text = builtins.toJSON {
       "terminal.integrated.fontFamily" = "'JetBrainsMono Nerd Font'";
       "workbench.colorTheme" = "Modern Purple Theme Dark";
+      "workbench.colorCustomizations" = {
+        "terminal.background" = "#0f0028";
+        "terminal.foreground" = "#dddddd";
+        "terminal.selectionBackground" = "#37323c";
+        "terminalCursor.foreground" = "#8c91fa";
+        "terminal.ansiBlack" = "#230046";
+        "terminal.ansiRed" = "#7d1625";
+        "terminal.ansiGreen" = "#337e6f";
+        "terminal.ansiYellow" = "#7f6f49";
+        "terminal.ansiBlue" = "#4f4a7f";
+        "terminal.ansiMagenta" = "#5a3f7f";
+        "terminal.ansiCyan" = "#58777f";
+        "terminal.ansiWhite" = "#736e7d";
+        "terminal.ansiBrightBlack" = "#372d46";
+        "terminal.ansiBrightRed" = "#e05167";
+        "terminal.ansiBrightGreen" = "#52e0c4";
+        "terminal.ansiBrightYellow" = "#e0c386";
+        "terminal.ansiBrightBlue" = "#8e87e0";
+        "terminal.ansiBrightMagenta" = "#a776e0";
+        "terminal.ansiBrightCyan" = "#9ad4e0";
+        "terminal.ansiBrightWhite" = "#8c91fa";
+      };
     };
   };
 

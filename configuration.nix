@@ -60,6 +60,7 @@
   programs.dank-material-shell = {
     enable = true;
     enableCalendarEvents = false;
+    systemd.enable = true;
   };
   programs.dux-search.enable = true;
   programs.dux-search.systemd.enable = true;

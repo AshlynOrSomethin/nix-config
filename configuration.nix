@@ -6,6 +6,7 @@
     ./fonts.nix
     ./home/flatpak.nix
     ./home/vscode.nix    
+    ./uutils.nix
   ];
 
   nixpkgs.overlays = [ (final: prev: {
@@ -109,6 +110,26 @@
     inputs.fresh.packages.${pkgs.stdenv.hostPlatform.system}.default
     inputs.jj.packages.${pkgs.stdenv.hostPlatform.system}.default
     jq
+    ripgrep
+    dust
+    lazygit
+    zoxide
+    pay-respects
+    xh
+    systemctl-tui
+    lazydocker
+    direnv
+    nix-direnv
+    nh
+    nvd
+    comma
+    nix-tree
+    duf
+    btop
+    gping
+    procs
+    doggo
+    atuin
     killall
     libargon2
     libinput
@@ -122,6 +143,7 @@
     wget
     wl-clipboard
     xwayland-satellite
+    lsd
   ];
 
   system.stateVersion = "26.05";

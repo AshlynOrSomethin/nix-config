@@ -37,6 +37,7 @@
 
     # Aliases
     shellAliases = {
+      man = "tldr";
       rebuild = "cd /etc/nixos && jj commit -m 'Update NixOS configuration' && sudo nix flake update && sudo nixos-rebuild switch --flake /etc/nixos";
       git = "jj git";
       ff = "hyfetch";

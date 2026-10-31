@@ -94,7 +94,7 @@ in
   users.users."ashlyn" = {
     isNormalUser = true;
     description = "ashlyn";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "vboxusers" ];
     shell = pkgs.zsh;
   };
 
@@ -102,7 +102,7 @@ in
 
   nixpkgs.config.allowUnfree = true;
 
-  virtualisation.vmware.host.enable = true;
+  virtualisation.virtualbox.host.enable = true;
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 

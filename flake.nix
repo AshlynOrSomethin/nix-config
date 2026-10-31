@@ -75,6 +75,11 @@
       flake = false;
     };
 
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
   outputs = { chaotic, dms, dux-files, home-manager, niri, nix-flatpak, nixpkgs, qylock, self, ... }@inputs: {

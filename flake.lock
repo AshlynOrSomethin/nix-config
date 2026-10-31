@@ -23,11 +23,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1793406773,
-        "narHash": "sha256-775PSwTXEf/vLE9wipoPFRAaLDxJjCqwoS5YgAhj+cM=",
+        "lastModified": 1793448936,
+        "narHash": "sha256-GABqP7Ri/iXAjtZJwQZzRx6x1OSIrSrdky7wmKgAZRo=",
         "owner": "chaotic-cx",
         "repo": "nyx",
-        "rev": "78974344de6830f2265380bef9e9149196b80e5e",
+        "rev": "d26ae44cd59c412c7d9f2d85f11732348f87ca7f",
         "type": "github"
       },
       "original": {
@@ -619,7 +619,8 @@
         "prismlauncher": "prismlauncher",
         "qylock": "qylock",
         "rofi-themes": "rofi-themes",
-        "satty": "satty"
+        "satty": "satty",
+        "sops-nix": "sops-nix"
       }
     },
     "rust-analyzer-src": {
@@ -695,6 +696,26 @@
         "owner": "Satty-org",
         "ref": "main",
         "repo": "Satty",
+        "type": "github"
+      }
+    },
+    "sops-nix": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1793052255,
+        "narHash": "sha256-Y/JIHTnMlOabDfyaSBubWGLDIVGihLEUuoMhFvQKaDo=",
+        "owner": "Mic92",
+        "repo": "sops-nix",
+        "rev": "60182817ee048ac94b4c68ea76d5ef2e8aac730d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Mic92",
+        "repo": "sops-nix",
         "type": "github"
       }
     },

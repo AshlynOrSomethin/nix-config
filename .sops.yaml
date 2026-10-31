@@ -1,0 +1,9 @@
+# Edit secrets with: sops secrets/github-token.yaml
+keys:
+  - &ashlyn age1rc2u687m29lwc9fakz525thdpzkq5cwa7c6gscr82ds04vcwcqjs5yuc25
+
+creation_rules:
+  - path_regex: ^secrets/.*\.yaml$
+    key_groups:
+      - age:
+          - *ashlyn

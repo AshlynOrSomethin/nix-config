@@ -1,3 +1,5 @@
 fonts/seguiemj.ttf
 result
 result-*
+secrets/keys.txt
+secrets/*.agekey

@@ -116,7 +116,11 @@
       rebuild() (
         setopt noxtrace noverbose
         local github_token
-        github_token=$(gh auth token --hostname github.com) || return 1
+        github_token=$(<${lib.escapeShellArg config.sops.secrets.github-token.path}) || return 1
+        if [[ -z "$github_token" ]]; then
+          print -u2 -- "SOPS GitHub token is empty; check systemctl --user status sops-nix."
+          return 1
+        fi
         export NIX_CONFIG="''${NIX_CONFIG-}"$'\n'"access-tokens = github.com=$github_token"
         unset github_token
 

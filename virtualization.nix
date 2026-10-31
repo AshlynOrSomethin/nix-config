@@ -1,3 +1,5 @@
+{ pkgs, ... }:
+
 {
   virtualisation.virtualbox.host = {
     enable = true;
@@ -5,4 +7,11 @@
     addNetworkInterface = false;
     enableExtensionPack = true;
   };
+
+  virtualisation.podman = {
+    enable = true;
+    defaultNetwork.settings.dns_enabled = true;
+  };
+
+  environment.systemPackages = [ pkgs.distrobox ];
 }

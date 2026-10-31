@@ -8,7 +8,7 @@
     ./services.nix
     ./packages.nix
     ./programs.nix
-    ./gaming.nix
+    ./home/gaming.nix
     ./shells.nix
     ./virtualization.nix
     ./fonts.nix

@@ -191,8 +191,7 @@ in
     macchina
     nodejs
     grim
-    flameshot
-    #pinentry-qt
+    pinentry-qt
     python3
     rustc
     qt6Packages.qt6ct

@@ -54,6 +54,7 @@
       # --- Existing ---
       man = "tldr";
       git = "jj git";
+      jjpush = "jj bookmark set main -r @- && jj git push --remote origin --bookmark main";
       ff = "hyfetch";
       reboot = "systemctl reboot";
       jctl = "journalctl -p 3 -xb";

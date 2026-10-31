@@ -1,10 +1,15 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs, ... }:
 
 {
   # --- Tools that need shell integration ---
   programs.zoxide.enable = true;        # gives you `z` and `zi`
   programs.atuin.enable = true;         # takes over Ctrl+R / up-arrow
   programs.pay-respects.enable = true;  # type `f` after a typo
+  programs.nix-your-shell = {
+    enable = true;
+    package = inputs.nix-your-shell.packages.${pkgs.stdenv.hostPlatform.system}.default;
+    enableZshIntegration = true;
+  };
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;

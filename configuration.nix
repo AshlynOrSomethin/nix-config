@@ -33,6 +33,7 @@ in
   security.sudo-rs.enable = true;
   security.polkit.enablePkexecWrapper = true;
 
+  boot.supportedFilesystems.zfs = lib.mkForce false;
   boot.loader.grub = {
     enable = true;
     efiSupport = true;
@@ -60,6 +61,8 @@ in
   services.udisks2.enable = true;
 
   programs.nix-ld.enable = true;
+  programs.steam.enable = true;
+  programs.gamemode.enable = true;
   programs.qylock = {
     enable = true;
     theme = "pixel-night-city";

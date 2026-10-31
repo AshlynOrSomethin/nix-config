@@ -54,7 +54,7 @@
       # --- Existing ---
       man = "tldr";
       git = "jj git";
-      jjpush = "jj bookmark set main -r @- && jj git push --remote origin --bookmark main";
+      jjpush = "jj bookmark set main -r @- && jj push --remote origin --bookmark main";
       ff = "hyfetch";
       reboot = "systemctl reboot";
       jctl = "journalctl -p 3 -xb";
@@ -125,7 +125,7 @@
           jj commit -m 'Update NixOS configuration' &&
           sudo --preserve-env=NIX_CONFIG nixos-rebuild switch --flake /etc/nixos &&
           jj bookmark set main -r @- &&
-          jj git push --remote origin --bookmark main
+          jj push --remote origin --bookmark main
       )
 
       mf() {

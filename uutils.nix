@@ -15,6 +15,9 @@ let
     + builtins.concatStringsSep "" (builtins.genList (_: "_") (builtins.stringLength pkgs.diffutils.version));
 in
 {
+  security.sudo.enable = false;
+  security.sudo-rs.enable = true;
+
   system.replaceDependencies.replacements = [
     {
       oldDependency = pkgs.coreutils-full;

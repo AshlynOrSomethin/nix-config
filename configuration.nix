@@ -132,7 +132,12 @@ in
 
   nixpkgs.config.allowUnfree = true;
 
-  virtualisation.virtualbox.host.enable = true;
+  virtualisation.virtualbox.host = {
+    enable = true;
+    enableKvm = true;
+    addNetworkInterface = false;
+    enableExtensionPack = true;
+  };
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 

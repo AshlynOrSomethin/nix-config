@@ -102,6 +102,8 @@ in
 
   nixpkgs.config.allowUnfree = true;
 
+  virtualisation.vmware.host.enable = true;
+
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   environment.systemPackages = with pkgs; [

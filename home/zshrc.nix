@@ -121,9 +121,11 @@
         unset github_token
 
         cd /etc/nixos &&
-          jj commit -m 'Update NixOS configuration' &&
           nix flake update &&
-          sudo --preserve-env=NIX_CONFIG nixos-rebuild switch --flake /etc/nixos
+          jj commit -m 'Update NixOS configuration' &&
+          sudo --preserve-env=NIX_CONFIG nixos-rebuild switch --flake /etc/nixos &&
+          jj bookmark set main -r @- &&
+          jj git push --remote origin --bookmark main
       )
 
       mf() {

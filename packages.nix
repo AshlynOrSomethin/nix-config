@@ -64,6 +64,7 @@ in
     qt6Packages.qt6ct
     ripgrep
     rustc
+    sequoia-chameleon-gnupg
     sshfs
     systemctl-tui
     tealdeer

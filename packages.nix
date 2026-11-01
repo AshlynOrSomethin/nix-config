@@ -65,6 +65,8 @@ in
     ripgrep
     rustc
     sequoia-chameleon-gnupg
+    sequoia-sq
+    sequoia-sqv
     sshfs
     systemctl-tui
     tealdeer

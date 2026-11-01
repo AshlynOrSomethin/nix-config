@@ -11,13 +11,17 @@ let
   });
 in
 {
-  programs.nix-ld.enable = true;
-
+  
   environment.systemPackages = with pkgs; [
-    sshfs
-    tealdeer
+    atuin
     bitwarden-cli
+    btop
     cargo
+    comma
+    direnv
+    doggo
+    duf
+    dust
     efibootmgr
     firefox
     fuzzel
@@ -25,6 +29,10 @@ in
     ghostty
     git
     gitoxide
+    gparted
+    gping
+    grim
+    gruvbox-gtk-theme
     gst_all_1.gst-plugins-bad
     gst_all_1.gst-plugins-base
     gst_all_1.gst-plugins-good
@@ -35,43 +43,34 @@ in
     inputs.fresh.packages.${pkgs.stdenv.hostPlatform.system}.default
     inputs.jj.packages.${pkgs.stdenv.hostPlatform.system}.default
     jq
-    ripgrep
-    dust
-    lazygit
-    zoxide
-    pay-respects
-    xh
-    systemctl-tui
-    lazydocker
-    direnv
-    nix-direnv
-    nh
-    nvd
-    comma
-    nix-tree
-    duf
-    btop
-    gping
-    procs
-    doggo
-    atuin
     killall
+    lazydocker
+    lazygit
     libargon2
     libinput
     libsecret
+    lsd
     lunar-client
     macchina
+    nh
+    nix-direnv
+    nix-tree
     nodejs
-    grim
+    nvd
+    pay-respects
     pinentry-qt
+    procs
     python3
-    rustc
     qt6Packages.qt6ct
-    gparted
-    gruvbox-gtk-theme
+    ripgrep
+    rustc
+    sshfs
+    systemctl-tui
+    tealdeer
     wget
     wl-clipboard
+    xh
     xwayland-satellite
-    lsd
+    zoxide
   ];
 }

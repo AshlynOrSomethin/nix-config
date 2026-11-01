@@ -16,4 +16,7 @@
   };
   programs.dux-search.enable = true;
   programs.dux-search.systemd.enable = true;
+  
+  programs.nix-ld.enable = true;
+
 }

@@ -28,6 +28,7 @@ in
   };
 
   home.packages = with pkgs; [
+    bitwarden-desktop
     vesktop
     (discord.override {
       withOpenASAR = true;

@@ -32,6 +32,8 @@
       url = "github:mpeterson2/nix-pelican-panel";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    proxmox-nixos.url = "github:SaumonNet/proxmox-nixos";
     
     sops-nix = {
       url = "github:Mic92/sops-nix";

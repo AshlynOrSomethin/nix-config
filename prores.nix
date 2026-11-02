@@ -10,7 +10,7 @@ let
     dontUnpack = true;
 
     nativeBuildInputs = [
-      pkgs.wrapGAppsHook
+      pkgs.wrapGAppsHook3
       pkgs.gobject-introspection
     ];
 

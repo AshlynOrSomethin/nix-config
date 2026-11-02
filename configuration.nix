@@ -8,6 +8,7 @@
     ./services.nix
     ./packages.nix
     ./programs.nix
+    ./prores.nix
     ./home/gaming.nix
     ./shells.nix
     ./virtualization.nix

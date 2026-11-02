@@ -9,9 +9,13 @@ let
       )
     '';
   });
+
+  # Custom python environment with pygobject3 included globally
+  myPython = pkgs.python3.withPackages (ps: [
+    ps.pygobject3
+  ]);
 in
 {
-  
   environment.systemPackages = with pkgs; [
     atuin
     bitwarden-cli
@@ -62,8 +66,7 @@ in
     pay-respects
     pinentry-qt
     procs
-    python3
-    python3Packages.pygobject3
+    myPython                    # Replaces plain python3 and pygobject3
     qt6Packages.qt6ct
     ripgrep
     rustc

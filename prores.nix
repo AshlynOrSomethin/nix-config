@@ -10,7 +10,7 @@ let
     dontUnpack = true;
 
     nativeBuildInputs = [
-      pkgs.wrapGAppsHook3
+      pkgs.wrapGAppsHook
       pkgs.gobject-introspection
     ];
 
@@ -27,8 +27,8 @@ let
 
     installPhase = ''
       mkdir -p $out/bin $out/share/conversor-prores
-      cp /etc/nixos/scripts/ConversorProRes2.sh $out/share/conversor-prores/
-      cp /etc/nixos/scripts/conversor_gui.py $out/share/conversor-prores/
+      cp ./scripts/ConversorProRes2.sh $out/share/conversor-prores/
+      cp ./scripts/conversor_gui.py $out/share/conversor-prores/
       chmod +x $out/share/conversor-prores/ConversorProRes2.sh
 
       makeWrapper $out/share/conversor-prores/ConversorProRes2.sh $out/bin/conversor-prores \

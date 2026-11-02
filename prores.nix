@@ -9,10 +9,11 @@ let
     import gi
     gi.require_version('Gtk', '3.0')
     from gi.repository import Gtk, Gdk, GLib
-    import sys, os, subprocess, threading
+    import sys, os, tempfile
 
-    tmpdir = sys.argv[1]
-    ICON = sys.argv[2]
+    # Safely handle arguments whether launched manually or via wrapper
+    tmpdir = sys.argv[1] if len(sys.argv) > 1 else tempfile.mkdtemp()
+    ICON = sys.argv[2] if len(sys.argv) > 2 else ""
 
     class ConversorWindow(Gtk.Window):
         def __init__(self):

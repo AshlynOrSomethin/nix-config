@@ -23,6 +23,7 @@ in
     duf
     dust
     efibootmgr
+    ffmpeg
     firefox
     fuzzel
     gh
@@ -62,6 +63,7 @@ in
     pinentry-qt
     procs
     python3
+    python3Packages.pygobject3
     qt6Packages.qt6ct
     ripgrep
     rustc

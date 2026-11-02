@@ -16,7 +16,6 @@ in
       ./sops.nix
       ../niri.nix
       ./ghostty.nix
-      ./davinci.nix
       inputs.dux-files.homeModules.dux-files
       ];
 

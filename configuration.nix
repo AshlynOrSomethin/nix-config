@@ -13,6 +13,7 @@
     ./virtualization.nix
     ./fonts.nix
     ./uutils.nix
+    ./davinci.nix
     ./home/flatpak.nix
     ./home/vscode.nix
   ];

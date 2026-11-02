@@ -57,6 +57,7 @@ in
     nix-tree
     nodejs
     nvd
+    overskride
     pay-respects
     pinentry-qt
     procs

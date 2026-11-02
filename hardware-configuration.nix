@@ -4,27 +4,22 @@
 { config, lib, pkgs, modulesPath, ... }:
 
 {
-  hardware.bluetooth = {
-    enable = true;
-    powerOnBoot = false;
-  };
-
   imports =
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci_prom21" "ahci" "xhci_pci" "thunderbolt" "usb_storage" "usbhid" "sd_mod" "sr_mod" ];
+  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/25cacc4e-b0df-4f32-88d0-794ede9feda2";
+    { device = "/dev/disk/by-uuid/ff928a59-f152-40b6-9dca-987f5790a38e";
       fsType = "ext4";
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/C366-75BB";
+    { device = "/dev/disk/by-uuid/D7A9-6A11";
       fsType = "vfat";
       options = [ "fmask=0077" "dmask=0077" ];
     };

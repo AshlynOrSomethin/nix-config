@@ -1,6 +1,8 @@
 {
   imports = [
     ./hardware-configuration.nix
+    ./mounts.nix
+    ./docker.nix
     ./system.nix
     ./locale.nix
     ./network.nix
@@ -8,14 +10,10 @@
     ./services.nix
     ./packages.nix
     ./programs.nix
-    ./prores.nix
-    ./home/gaming.nix
     ./shells.nix
     ./virtualization.nix
-    ./fonts.nix
     ./uutils.nix
-    ./davinci.nix
-    ./home/flatpak.nix
-    ./home/vscode.nix
+    ./pelican.nix
+#    ./vscode.nix
   ];
 }

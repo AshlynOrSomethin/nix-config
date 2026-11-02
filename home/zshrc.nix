@@ -54,7 +54,7 @@
       # --- Existing ---
       man = "tldr";
       git = "jj git";
-      jjpush = "jj bookmark set main -r @- && jj push --remote origin --bookmark main";
+      jjpush = "jj bookmark set server -r @- && jj git push --remote origin --bookmark server";
       ff = "hyfetch";
       reboot = "systemctl reboot";
       jctl = "journalctl -p 3 -xb";
@@ -122,14 +122,15 @@
           return 1
         fi
         export NIX_CONFIG="''${NIX_CONFIG-}"$'\n'"access-tokens = github.com=$github_token"
+        export GH_TOKEN="$github_token"
         unset github_token
 
         cd /etc/nixos &&
           nix flake update &&
           jj commit -m 'Update NixOS configuration' &&
           sudo --preserve-env=NIX_CONFIG nixos-rebuild switch --flake /etc/nixos &&
-          jj bookmark set main -r @- &&
-          jj push --remote origin --bookmark main
+          jj bookmark set server -r @- &&
+          jj git push --remote origin --bookmark server
       )
 
       mf() {

@@ -1,5 +1,6 @@
 {
-  networking.hostName = "nixos";
+  networking.firewall.enable = false;
+  networking.hostName = "server";
   networking.networkmanager.enable = true;
   networking.networkmanager.dns = "none";
   networking.dhcpcd.extraConfig = "nohook resolv.conf";

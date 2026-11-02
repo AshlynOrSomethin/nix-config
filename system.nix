@@ -23,9 +23,12 @@
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   users.users."ashlyn" = {
+    openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAA... ashlyn@nixos"
+    ];
     isNormalUser = true;
     description = "ashlyn";
-    extraGroups = [ "networkmanager" "wheel" "vboxusers" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" "podman" ];
     shell = pkgs.zsh;
   };
 

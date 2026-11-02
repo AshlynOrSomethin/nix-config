@@ -14,7 +14,7 @@
   services.udisks2.enable = true;
   services.fprintd.enable = true;
   services.printing.enable = true;
-
+  services.blueman.enable = true;
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {

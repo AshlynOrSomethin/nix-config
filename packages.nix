@@ -47,7 +47,7 @@ in
     libinput
     libsecret
     lsd
-    macchina
+    fastfetch
     nh
     nix-direnv
     nix-tree

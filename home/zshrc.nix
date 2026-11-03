@@ -126,9 +126,9 @@
         unset github_token
 
         cd /etc/nixos &&
-          nix flake update &&
+          nix --quiet --quiet --quiet flake update &&
           jj commit -m 'Update NixOS configuration' &&
-          sudo --preserve-env=NIX_CONFIG nixos-rebuild switch --flake /etc/nixos &&
+          sudo --preserve-env=NIX_CONFIG nixos-rebuild switch --quiet --quiet --quiet --flake /etc/nixos &&
           jj bookmark set server -r @- &&
           jj git push --remote origin --bookmark server
       )
@@ -175,7 +175,11 @@
 
       # Fastfetch startup prompt check
       if [[ -o interactive ]] && [[ -t 1 ]] && command -v fastfetch > /dev/null 2>&1; then
-        "$HOME/.config/fastfetch/ffbox.sh"
+        if [[ -x "$HOME/.config/fastfetch/ffbox.sh" ]]; then
+          "$HOME/.config/fastfetch/ffbox.sh"
+        else
+          fastfetch
+        fi
       fi
     '';
   };

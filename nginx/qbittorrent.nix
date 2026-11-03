@@ -25,7 +25,7 @@
     ];
     locations."/" = {
       priority = 100;
-      proxyPass = "http://127.0.0.1:8080/";
+      proxyPass = "http://127.0.0.1:8085/";
       extraConfig = ''
         proxy_http_version 1.1;
         proxy_set_header Host $host;
@@ -59,7 +59,7 @@
     ];
     locations."/" = {
       priority = 100;
-      proxyPass = "http://127.0.0.1:8080/";
+      proxyPass = "http://127.0.0.1:8085/";
       extraConfig = ''
         proxy_http_version 1.1;
         proxy_set_header Host $host;

@@ -13,6 +13,7 @@
     ./shells.nix
     ./virtualization.nix
     ./proxmox.nix
+    ./qbit.nix
     ./uutils.nix
     ./pelican.nix
 #    ./vscode.nix

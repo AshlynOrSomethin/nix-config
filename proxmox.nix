@@ -7,25 +7,7 @@ in
 {
   imports = [ inputs.proxmox-nixos.nixosModules.proxmox-ve ];
 
-  nixpkgs.overlays = [
-    inputs.proxmox-nixos.overlays.${config.nixpkgs.hostPlatform.system}
-    (_: prev: {
-      proxmox-ve = prev.proxmox-ve.override {
-        pve-manager = prev.pve-manager.override {
-          proxmox-widget-toolkit = prev.proxmox-widget-toolkit.overrideAttrs (old: {
-            postPatch = (old.postPatch or "") + ''
-              substituteInPlace Utils.js --replace-fail \
-                "res === null ||
-                                      res === undefined ||
-                                      !res ||
-                                      res.data.status.toLowerCase() !== 'active'" \
-                "false"
-            '';
-          });
-        };
-      };
-    })
-  ];
+  nixpkgs.overlays = [ inputs.proxmox-nixos.overlays.${config.nixpkgs.hostPlatform.system} ];
 
   services.proxmox-ve = {
     enable = true;

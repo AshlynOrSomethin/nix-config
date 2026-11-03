@@ -14,6 +14,7 @@
     ./virtualization.nix
     ./proxmox.nix
     ./home/qbit.nix
+    ./vaultwarden-backup.nix
     ./uutils.nix
     ./pelican.nix
 #    ./vscode.nix

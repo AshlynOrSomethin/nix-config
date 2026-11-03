@@ -126,11 +126,11 @@
         unset github_token
 
         cd /etc/nixos &&
-          nix --quiet --quiet --quiet flake update &&
           jj commit -m 'Update NixOS configuration' &&
-          sudo --preserve-env=NIX_CONFIG nixos-rebuild switch --quiet --quiet --quiet --flake /etc/nixos &&
           jj bookmark set server -r @- &&
-          jj git push --remote origin --bookmark server
+          jj git push --remote origin --bookmark server &&
+          nix --quiet flake update &&
+          sudo --preserve-env=NIX_CONFIG nixos-rebuild switch --quiet --flake /etc/nixos
       )
 
       mf() {

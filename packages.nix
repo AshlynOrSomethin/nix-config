@@ -69,6 +69,7 @@ in
     myPython                    # Replaces plain python3 and pygobject3
     qt6Packages.qt6ct
     ripgrep
+    ruffle
     rustc
     sequoia-chameleon-gnupg
     sequoia-sq

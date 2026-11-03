@@ -1,13 +1,77 @@
-{ config, inputs, ... }:
+{ config, inputs, lib, pkgs, ... }:
 
+let
+  proxmoxPkgs = inputs.proxmox-nixos.inputs.nixpkgs-stable.legacyPackages.${config.nixpkgs.hostPlatform.system};
+  pamModule = name: lib.mkForce "${proxmoxPkgs.pam}/lib/security/pam_${name}.so";
+in
 {
   imports = [ inputs.proxmox-nixos.nixosModules.proxmox-ve ];
 
-  nixpkgs.overlays = [ inputs.proxmox-nixos.overlays.${config.nixpkgs.hostPlatform.system} ];
+  nixpkgs.overlays = [
+    inputs.proxmox-nixos.overlays.${config.nixpkgs.hostPlatform.system}
+    (_: prev: {
+      proxmox-ve = prev.proxmox-ve.override {
+        pve-manager = prev.pve-manager.override {
+          proxmox-widget-toolkit = prev.proxmox-widget-toolkit.overrideAttrs (old: {
+            postPatch = (old.postPatch or "") + ''
+              substituteInPlace Utils.js --replace-fail \
+                "res === null ||
+                                      res === undefined ||
+                                      !res ||
+                                      res.data.status.toLowerCase() !== 'active'" \
+                "false"
+            '';
+          });
+        };
+      };
+    })
+  ];
 
   services.proxmox-ve = {
     enable = true;
     ipAddress = "192.168.1.2";
+  };
+
+  # Proxmox's stable runtime cannot load PAM modules built against the host's newer glibc.
+  security.pam.services.proxmox-ve-auth = {
+    fprintAuth = false;
+    rules = {
+      account.unix.modulePath = pamModule "unix";
+      auth = {
+        faillock.modulePath = pamModule "faillock";
+        unix.modulePath = pamModule "unix";
+        deny.modulePath = pamModule "deny";
+      };
+      password.unix.modulePath = pamModule "unix";
+      session = {
+        env.modulePath = pamModule "env";
+        unix.modulePath = pamModule "unix";
+        limits.modulePath = pamModule "limits";
+      };
+    };
+  };
+
+  systemd.services.proxmox-admin = {
+    description = "Configure the Proxmox administrator account";
+    wantedBy = [ "multi-user.target" ];
+    requires = [ "pve-cluster.service" ];
+    after = [ "pve-cluster.service" ];
+    path = [ config.services.proxmox-ve.package pkgs.jq ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+    script = ''
+      set -euo pipefail
+      users=$(pveum user list --output-format json)
+      existing=$(printf '%s' "$users" | jq -r '.[] | select(.userid == "ashlyn@pam") | .userid')
+      if [ -z "$existing" ]; then
+        pveum user add ashlyn@pam --enable 1
+      else
+        pveum user modify ashlyn@pam --enable 1
+      fi
+      pveum acl modify / --users ashlyn@pam --roles Administrator --propagate 1
+    '';
   };
 
   nix.settings = {

@@ -12,6 +12,7 @@ in
   services.proxmox-ve = {
     enable = true;
     ipAddress = "192.168.1.2";
+    bridges = [ "vmbr0" ];
     package = pkgs.proxmox-ve.override {
       pve-manager = pkgs.pve-manager.overrideAttrs (old: {
         postFixup = (old.postFixup or "") + ''

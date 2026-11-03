@@ -263,12 +263,11 @@ in
         image = "ghcr.io/ashlynorsomethin/iqbit:latest";
         autoStart = true;
         environment = {
-          "QBIT_HOST" = "http://pulsar.ltd:8080";
+          "QBIT_HOST" = "http://127.0.0.1:8085";
+          "STANDALONE_SERVER_PORT" = "8082";
         };
-        ports = [ "8082:8081" ];
         volumes = [ "/etc/docker-compose/iQbit/server.js:/usr/src/node-app/server/server.js:ro,Z" ];
-        networks = [ "iqbit_default" ];
-        extraOptions = [ "--network-alias=iqbit" ];
+        extraOptions = [ "--network=host" ];
       };
 
       "prowlarr" = {

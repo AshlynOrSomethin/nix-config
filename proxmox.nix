@@ -12,6 +12,14 @@ in
   services.proxmox-ve = {
     enable = true;
     ipAddress = "192.168.1.2";
+    package = pkgs.proxmox-ve.override {
+      pve-manager = pkgs.pve-manager.overrideAttrs (old: {
+        postFixup = (old.postFixup or "") + ''
+          substituteInPlace "$out/${proxmoxPkgs.perl.libPrefix}/${proxmoxPkgs.perl.version}/PVE/API2/Nodes.pm" --replace-fail \
+            "['login'" "['${lib.getBin pkgs.util-linux}/bin/login'"
+        '';
+      });
+    };
   };
 
   # Proxmox's stable runtime cannot load PAM modules built against the host's newer glibc.

@@ -21,10 +21,10 @@ let
       ssh ${sshArgs} ashlyn@xali.host \
         'mkdir -p ~/.cache/vaultwarden-backup-setup && chmod 700 ~/.cache/vaultwarden-backup-setup'
       scp ${sshArgs} \
-        ${./home/vaultwarden-backup-setup.sh} \
+        ${./vaultwarden-backup-setup.sh} \
         ashlyn@xali.host:.cache/vaultwarden-backup-setup/setup.sh
       scp ${sshArgs} \
-        ${./home/vaultwarden-backup-export.sh} \
+        ${./vaultwarden-backup-export.sh} \
         ashlyn@xali.host:.cache/vaultwarden-backup-setup/export.sh
       ssh -t ${sshArgs} ashlyn@xali.host \
         'sudo bash ~/.cache/vaultwarden-backup-setup/setup.sh'

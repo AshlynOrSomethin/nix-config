@@ -93,11 +93,11 @@
 
   outputs = { chaotic, dms, dux-files, home-manager, nix-flatpak, nixpkgs, qylock, vscode-server, ... }@inputs:
     let
-      mkHost = { host, home, extraModules ? [ ] }:
+      mkHost = { host, home, configuration, extraModules ? [ ] }:
         nixpkgs.lib.nixosSystem {
           specialArgs = { inherit host inputs; };
           modules = [
-            ./configuration.nix
+            configuration
             home-manager.nixosModules.home-manager
           ] ++ extraModules ++ [
             {
@@ -115,6 +115,7 @@
 
       desktop = mkHost {
         host = "desktop";
+        configuration = ./desktop/default.nix;
         home = ./desktop/home/home.nix;
         extraModules = [
           dms.nixosModules.dank-material-shell
@@ -125,6 +126,7 @@
 
       server = mkHost {
         host = "server";
+        configuration = ./server/default.nix;
         home = ./server/home/home.nix;
         extraModules = [
           vscode-server.nixosModules.default

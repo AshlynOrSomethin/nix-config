@@ -1,8 +1,6 @@
 {
   networking.firewall.enable = false;
   networking.hostName = "server";
-  networking.networkmanager.enable = true;
-  networking.networkmanager.dns = "none";
   networking.networkmanager.ensureProfiles.profiles = {
     vmbr0 = {
       connection = {
@@ -35,11 +33,4 @@
       };
     };
   };
-  networking.dhcpcd.extraConfig = "nohook resolv.conf";
-  networking.resolvconf.enable = true;
-  networking.nameservers = [
-    "40.160.23.89"
-    "1.1.1.1"
-    "8.8.8.8"
-  ];
 }

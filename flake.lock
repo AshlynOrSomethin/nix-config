@@ -360,11 +360,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793737583,
-        "narHash": "sha256-TtMXH2gh+f92YWGMV1yEEiEuOPXDitwg9EiC7kdz5fQ=",
+        "lastModified": 1793830317,
+        "narHash": "sha256-5WyxIqBfOFEl9LDbvni/ZhiCPE8AN1seNDM52PFFjJs=",
         "owner": "sinelaw",
         "repo": "fresh",
-        "rev": "2338640274915a37786810bd8b59439c6633ba64",
+        "rev": "fe9444c23d414a25fd768e4947361a098ceb96ff",
         "type": "github"
       },
       "original": {

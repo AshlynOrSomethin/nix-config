@@ -125,8 +125,17 @@
         export GH_TOKEN="$github_token"
         unset github_token
 
-        cd /etc/nixos &&
-          jj commit -m 'Update NixOS configuration' &&
+        cd /etc/nixos || return 1
+        jj git fetch --remote origin &&
+          jj rebase -b @ -o main@origin || return 1
+        local conflicts
+        conflicts=$(jj log --no-graph -r 'conflicts() & (main@origin..@)' -T commit_id) || return 1
+        if [[ -n "$conflicts" ]]; then
+          print -u2 -- "Rebuild stopped: resolve Jujutsu conflicts before continuing."
+          return 1
+        fi
+
+        jj commit -m 'Update NixOS configuration' &&
           jj bookmark set main -r @- &&
           jj git push --remote origin --bookmark main &&
           nix --quiet flake update &&

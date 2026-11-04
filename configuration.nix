@@ -1,21 +1,7 @@
+{ host, ... }:
+assert builtins.elem host [ "desktop" "server" ];
 {
   imports = [
-    ./hardware-configuration.nix
-    ./system.nix
-    ./locale.nix
-    ./network.nix
-    ./sshfs.nix
-    ./services.nix
-    ./packages.nix
-    ./programs.nix
-    ./prores.nix
-    ./home/gaming.nix
-    ./shells.nix
-    ./virtualization.nix
-    ./fonts.nix
-    ./uutils.nix
-    ./davinci.nix
-    ./home/flatpak.nix
-    ./home/vscode.nix
+    (if host == "server" then ./server/default.nix else ./desktop/default.nix)
   ];
 }

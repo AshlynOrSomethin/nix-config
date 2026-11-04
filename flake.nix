@@ -80,28 +80,64 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    pelican-panel = {
+      url = "github:mpeterson2/nix-pelican-panel";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    proxmox-nixos.url = "github:SaumonNet/proxmox-nixos";
+
+    vscode-server.url = "github:nix-community/nixos-vscode-server";
+
   };
 
-  outputs = { chaotic, dms, dux-files, home-manager, niri, nix-flatpak, nixpkgs, qylock, self, ... }@inputs: {
-    nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
-      specialArgs = { inherit inputs; };
-      modules = [
-        ./configuration.nix
-        home-manager.nixosModules.home-manager
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.extraSpecialArgs = { inherit inputs; };
-          home-manager.users.ashlyn = import ./home/home.nix;
-          home-manager.backupFileExtension = "bak";
-        }
-        dms.nixosModules.dank-material-shell
-        qylock.nixosModules.default
-        chaotic.nixosModules.nyx-cache
-        chaotic.nixosModules.nyx-overlay
-        chaotic.nixosModules.nyx-registry
-        nix-flatpak.nixosModules.nix-flatpak
-      ];
+  outputs = { chaotic, dms, dux-files, home-manager, nix-flatpak, nixpkgs, qylock, vscode-server, ... }@inputs:
+    let
+      mkHost = { host, home, extraModules ? [ ] }:
+        nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit host inputs; };
+          modules = [
+            ./configuration.nix
+            home-manager.nixosModules.home-manager
+          ] ++ extraModules ++ [
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = { inherit inputs; };
+              home-manager.users.ashlyn = import home;
+              home-manager.backupFileExtension = "bak";
+            }
+            chaotic.nixosModules.nyx-cache
+            chaotic.nixosModules.nyx-overlay
+            chaotic.nixosModules.nyx-registry
+          ];
+        };
+
+      desktop = mkHost {
+        host = "desktop";
+        home = ./desktop/home/home.nix;
+        extraModules = [
+          dms.nixosModules.dank-material-shell
+          qylock.nixosModules.default
+          nix-flatpak.nixosModules.nix-flatpak
+        ];
+      };
+
+      server = mkHost {
+        host = "server";
+        home = ./server/home/home.nix;
+        extraModules = [
+          vscode-server.nixosModules.default
+          {
+            services.vscode-server.enable = true;
+          }
+        ];
+      };
+    in
+    {
+      nixosConfigurations = {
+        inherit desktop server;
+        nixos = desktop;
+      };
     };
-  };
 }

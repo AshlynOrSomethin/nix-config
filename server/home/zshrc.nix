@@ -83,9 +83,9 @@
       sctl = "systemctl-tui";
 
       # --- NixOS (nh / nvd / nix-tree) ---
-      nrs = "nh os switch /etc/nixos";
-      nrt = "nh os test /etc/nixos";
-      nrb = "nh os boot /etc/nixos";
+      nrs = "nh os switch /etc/nixos --hostname server";
+      nrt = "nh os test /etc/nixos --hostname server";
+      nrb = "nh os boot /etc/nixos --hostname server";
       nclean = "nh clean all --keep 5";
       nixdiff = "nvd diff /run/booted-system /run/current-system";
       ntree = "nix-tree /run/current-system";
@@ -130,7 +130,7 @@
           jj bookmark set main -r @- &&
           jj git push --remote origin --bookmark main &&
           nix --quiet flake update &&
-          sudo --preserve-env=NIX_CONFIG nixos-rebuild switch --quiet --flake /etc/nixos
+          sudo --preserve-env=NIX_CONFIG nixos-rebuild switch --quiet --flake /etc/nixos#server
       )
 
       mf() {
@@ -141,7 +141,7 @@
         local orig_dir="$PWD"
         cd /etc/nixos || return 1
         git add . || { cd "$orig_dir"; return 1; }
-        sudo nixos-rebuild switch || { cd "$orig_dir"; return 1; }
+        sudo nixos-rebuild switch --flake /etc/nixos#server || { cd "$orig_dir"; return 1; }
         cd "$orig_dir" || return 1
         exec zsh
       }

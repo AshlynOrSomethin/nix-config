@@ -31,11 +31,19 @@ in
     qbittorrent
     bitwarden-desktop
     vesktop
+    (wineWow64Packages.override {
+      waylandFull = true;
+      staging = true;
+      fonts = true;
+      yabridge = true;
+    })
+
     (discord.override {
       withOpenASAR = true;
       withVencord = true;
     })
     inputs.prismlauncher.packages.${pkgs.stdenv.hostPlatform.system}.prismlauncher
+    inputs.serein.packages.${pkgs.stdenv.hostPlatform.system}.serein
     topgrade
     satty
     papirus-icon-theme

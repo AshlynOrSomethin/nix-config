@@ -134,7 +134,8 @@
           return 1
         fi
 
-        nix flake update &&
+        ${pkgs.python3}/bin/python3 ./desktop/scripts/update-wine-cachyos.py &&
+          nix flake update &&
           jj commit -m 'Update NixOS configuration' &&
           sudo --preserve-env=NIX_CONFIG nixos-rebuild switch --flake /etc/nixos#desktop &&
           jj bookmark set main -r @- &&

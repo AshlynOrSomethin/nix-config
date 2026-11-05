@@ -381,11 +381,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793910941,
-        "narHash": "sha256-gx0N48sVZoDZZfvY8zGwCqEbQhQ96YzfGsV8y0faqtU=",
+        "lastModified": 1793917840,
+        "narHash": "sha256-wz85WFz4K5ry9wEN/5VqMsnL5XMk0X/WDJ8xi/clwF0=",
         "owner": "sinelaw",
         "repo": "fresh",
-        "rev": "840026bdf8d463e940201387870254cbd57372a5",
+        "rev": "8e21877fa9f4a2424ace9a4991f47db9c9e532d7",
         "type": "github"
       },
       "original": {
@@ -766,7 +766,8 @@
         "satty": "satty",
         "serein": "serein",
         "sops-nix": "sops-nix",
-        "vscode-server": "vscode-server"
+        "vscode-server": "vscode-server",
+        "wine-cachyos": "wine-cachyos"
       }
     },
     "rust-analyzer-src": {
@@ -979,6 +980,23 @@
       "original": {
         "owner": "nix-community",
         "repo": "nixos-vscode-server",
+        "type": "github"
+      }
+    },
+    "wine-cachyos": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1792494434,
+        "narHash": "sha256-WDkQNZtcvcL+gh24ZEti4dLA0UlKAw/UCDOw0yUHBoA=",
+        "owner": "CachyOS",
+        "repo": "wine-cachyos",
+        "rev": "cd14106e4fc0f96006005b07985e49cc1517e9c0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "CachyOS",
+        "ref": "cachyos-11.0-20261015-proton",
+        "repo": "wine-cachyos",
         "type": "github"
       }
     }

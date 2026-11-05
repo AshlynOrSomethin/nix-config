@@ -28,6 +28,7 @@ in
   };
 
   home.packages = with pkgs; [
+    qbittorrent
     bitwarden-desktop
     vesktop
     (discord.override {

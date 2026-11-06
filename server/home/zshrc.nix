@@ -127,6 +127,7 @@
 
         cd /etc/nixos || return 1
         jj git fetch --remote origin &&
+          jj bookmark track main@origin &&
           jj rebase -b @ -o main@origin || return 1
         local conflicts
         conflicts=$(jj log --no-graph -r 'conflicts() & (main@origin..@)' -T commit_id) || return 1

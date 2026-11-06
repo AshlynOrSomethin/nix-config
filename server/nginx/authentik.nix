@@ -22,10 +22,8 @@
     ];
     locations."^~ /outpost.goauthentik.io/" = {
       priority = 100;
-      proxyPass = "https://127.0.0.1:9443";
+      proxyPass = "http://127.0.0.1:9180";
       extraConfig = ''
-        proxy_ssl_server_name on;
-        proxy_ssl_verify off;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -37,7 +35,7 @@
     };
     locations."/" = {
       priority = 101;
-      proxyPass = "http://127.0.0.1:9000";
+      proxyPass = "http://127.0.0.1:9180";
       extraConfig = ''
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;

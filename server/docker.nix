@@ -4,8 +4,9 @@
 # environment files in /var/lib/docker-compose-env backed up separately.
 let
   docker = "${config.virtualisation.docker.package}/bin/docker";
-  containerNames = [ "audiobookshelf-audiobookshelf-1" "forgejo" "searxng" "uptimekuma-uptime-kuma-1" "authentik-postgresql-1" "authentik-server-1" "authentik-worker-1" "bazarr" "bitmagnet" "bitmagnet-postgres" "chiyogami" "freshrss" "grimmory" "grimmory-mariadb-1" "iqbit" "prowlarr" "radarr" "sonarr" ];
-  healthyContainers = [ "authentik-postgresql-1" "bitmagnet-postgres" "grimmory-mariadb-1" ];
+  containerNames = [ "authentik-server-1" "authentik-worker-1" "bazarr" "bitmagnet" "chiyogami" "freshrss" "grimmory" "grimmory-mariadb-1" "iqbit" "prowlarr" "radarr" "sonarr" ];
+  healthyContainers = [ "grimmory-mariadb-1" ];
+  # Retain legacy networks and volumes for rollback.
   networks = {
     "audiobookshelf_default" = "bridge";
     "forgejo_forgejo" = "bridge";
@@ -28,16 +29,12 @@ let
     "freshrss_extensions" = "local";
   };
   bindPaths = {
-    "audiobookshelf-audiobookshelf-1" = [ "/etc/docker-compose/AudioBookShelf/audiobookshelf/config" "/etc/docker-compose/AudioBookShelf/audiobookshelf/metadata" "/Books/AudioBooks" "/Podcasts" ];
-    "forgejo" = [ "/etc/docker-compose/ForgeJo/forgejo" "/etc/localtime" ];
-    "searxng" = [ "/var/www/SearXNG/config" "/var/www/SearXNG/data" ];
-    "uptimekuma-uptime-kuma-1" = [ "/etc/docker-compose/UptimeKuma/data" ];
-    "authentik-server-1" = [ "/etc/docker-compose/authentik/data" "/etc/docker-compose/authentik/custom-templates" ];
-    "authentik-worker-1" = [ "/var/run/docker.sock" "/etc/docker-compose/authentik/data" "/etc/docker-compose/authentik/certs" "/etc/docker-compose/authentik/custom-templates" ];
+    "authentik-server-1" = [ "/run/postgresql" "/etc/docker-compose/authentik/data" "/etc/docker-compose/authentik/custom-templates" ];
+    "authentik-worker-1" = [ "/run/postgresql" "/var/run/docker.sock" "/etc/docker-compose/authentik/data" "/etc/docker-compose/authentik/certs" "/etc/docker-compose/authentik/custom-templates" ];
     "bazarr" = [ "/var/www/bazarr/config" "/Movies" "/TV" ];
-    "bitmagnet-postgres" = [ "/etc/docker-compose/bitmagnet/bitmagnet/postgres" ];
+    "bitmagnet" = [ "/run/postgresql" ];
     "chiyogami" = [ "/etc/docker-compose/chiyogami/pastes" ];
-    "freshrss" = [ "/var/www/FreshRSS" ];
+    "freshrss" = [ "/run/postgresql" "/var/www/FreshRSS" ];
     "grimmory" = [ "/etc/docker-compose/grimmory/data" "/Books" "/etc/docker-compose/grimmory/bookdrop" ];
     "grimmory-mariadb-1" = [ "/etc/docker-compose/grimmory/mariadb/config" ];
     "iqbit" = [ "/etc/docker-compose/iQbit/server.js" ];
@@ -50,91 +47,21 @@ in
   virtualisation.oci-containers = {
     backend = "docker";
     containers = {
-      mariadb = {
-        image = "mariadb:13.0";
-        autoStart = true;
-        ports = [ "3306:3306" ];
-        volumes = [ "/var/lib/mariadb:/var/lib/mysql" ];
-      };
-
       # Secret values live in root-only environment files, never in the Nix store.
-      "audiobookshelf-audiobookshelf-1" = {
-        image = "ghcr.io/advplyr/audiobookshelf:latest";
-        autoStart = true;
-        environment = {
-          "TZ" = "America/Chicago";
-        };
-        ports = [ "13378:80" ];
-        volumes = [ "/etc/docker-compose/AudioBookShelf/audiobookshelf/config:/config" "/etc/docker-compose/AudioBookShelf/audiobookshelf/metadata:/metadata" "/Books/AudioBooks:/audiobooks" "/Podcasts:/podcasts" ];
-        networks = [ "audiobookshelf_default" ];
-        extraOptions = [ "--network-alias=audiobookshelf" ];
-      };
-
-      "forgejo" = {
-        image = "codeberg.org/forgejo/forgejo:17";
-        autoStart = true;
-        environment = {
-          "USER_GID" = "1000";
-          "USER_UID" = "1000";
-        };
-        ports = [ "3005:3000" "222:22" ];
-        volumes = [ "/etc/docker-compose/ForgeJo/forgejo:/data" "/etc/localtime:/etc/localtime:ro" ];
-        networks = [ "forgejo_forgejo" ];
-        extraOptions = [ "--network-alias=server" ];
-      };
-
-      "searxng" = {
-        image = "ghcr.io/privau/searxng:latest";
-        autoStart = true;
-        environment = {
-          "CONTACT" = "mailto:ashlyn@pulsar.ltd";
-          "NAME" = "Pulse Search";
-        };
-        ports = [ "8842:8080" ];
-        volumes = [ "/var/www/SearXNG/config:/etc/searxng" "/var/www/SearXNG/data:/var/cache/searxng" ];
-        networks = [ "searxng_default" ];
-        extraOptions = [ "--network-alias=searxng" ];
-      };
-
-      "uptimekuma-uptime-kuma-1" = {
-        image = "louislam/uptime-kuma:2";
-        autoStart = true;
-        ports = [ "3001:3001" ];
-        volumes = [ "/etc/docker-compose/UptimeKuma/data:/app/data" ];
-        networks = [ "uptimekuma_default" ];
-        extraOptions = [ "--network-alias=uptime-kuma" ];
-      };
-
-      "authentik-postgresql-1" = {
-        image = "docker.io/library/postgres:16-alpine";
-        autoStart = true;
-        environment = {
-          "COMPOSE_PORT_HTTP" = "9180";
-          "COMPOSE_PORT_HTTPS" = "9143";
-          "POSTGRES_DB" = "authentik";
-          "POSTGRES_USER" = "authentik";
-        };
-        environmentFiles = [ "/var/lib/docker-compose-env/authentik-postgresql-1.env" ];
-        volumes = [ "authentik_database:/var/lib/postgresql/data" ];
-        networks = [ "authentik_default" ];
-        extraOptions = [ "--network-alias=postgresql" "--health-cmd=pg_isready -d \${POSTGRES_DB} -U \${POSTGRES_USER}" "--health-interval=30s" "--health-timeout=5s" "--health-start-period=20s" "--health-retries=5" ];
-      };
-
       "authentik-server-1" = {
         image = "ghcr.io/goauthentik/server:2026.8.3";
         autoStart = true;
         environment = {
-          "AUTHENTIK_POSTGRESQL__HOST" = "postgresql";
+          "AUTHENTIK_POSTGRESQL__HOST" = "/run/postgresql";
           "AUTHENTIK_POSTGRESQL__NAME" = "authentik";
           "AUTHENTIK_POSTGRESQL__USER" = "authentik";
           "COMPOSE_PORT_HTTP" = "9180";
           "COMPOSE_PORT_HTTPS" = "9143";
         };
-        environmentFiles = [ "/var/lib/docker-compose-env/authentik-server-1.env" ];
+        environmentFiles = [ "/var/lib/native-services-migration/authentik-server-1.env" ];
         ports = [ "9180:9000" "9143:9443" ];
-        volumes = [ "/etc/docker-compose/authentik/data:/data" "/etc/docker-compose/authentik/custom-templates:/templates" ];
+        volumes = [ "/run/postgresql:/run/postgresql:ro" "/etc/docker-compose/authentik/data:/data" "/etc/docker-compose/authentik/custom-templates:/templates" ];
         networks = [ "authentik_default" ];
-        dependsOn = [ "authentik-postgresql-1" ];
         cmd = [ "server" ];
         extraOptions = [ "--network-alias=server" "--shm-size=536870912" ];
       };
@@ -143,16 +70,15 @@ in
         image = "ghcr.io/goauthentik/server:2026.8.3";
         autoStart = true;
         environment = {
-          "AUTHENTIK_POSTGRESQL__HOST" = "postgresql";
+          "AUTHENTIK_POSTGRESQL__HOST" = "/run/postgresql";
           "AUTHENTIK_POSTGRESQL__NAME" = "authentik";
           "AUTHENTIK_POSTGRESQL__USER" = "authentik";
           "COMPOSE_PORT_HTTP" = "9180";
           "COMPOSE_PORT_HTTPS" = "9143";
         };
-        environmentFiles = [ "/var/lib/docker-compose-env/authentik-worker-1.env" ];
-        volumes = [ "/var/run/docker.sock:/var/run/docker.sock" "/etc/docker-compose/authentik/data:/data" "/etc/docker-compose/authentik/certs:/certs" "/etc/docker-compose/authentik/custom-templates:/templates" ];
+        environmentFiles = [ "/var/lib/native-services-migration/authentik-worker-1.env" ];
+        volumes = [ "/run/postgresql:/run/postgresql:ro" "/var/run/docker.sock:/var/run/docker.sock" "/etc/docker-compose/authentik/data:/data" "/etc/docker-compose/authentik/certs:/certs" "/etc/docker-compose/authentik/custom-templates:/templates" ];
         networks = [ "authentik_default" ];
-        dependsOn = [ "authentik-postgresql-1" ];
         cmd = [ "worker" ];
         user = "root";
         extraOptions = [ "--network-alias=worker" "--shm-size=536870912" ];
@@ -160,7 +86,7 @@ in
 
       "bazarr" = {
         image = "lscr.io/linuxserver/bazarr:latest";
-        autoStart = true;
+        autoStart = false;
         environment = {
           "PGID" = "1000";
           "PUID" = "1000";
@@ -177,27 +103,16 @@ in
         image = "ghcr.io/bitmagnet-io/bitmagnet:latest";
         autoStart = true;
         environment = {
-          "POSTGRES_HOST" = "postgres";
+          "POSTGRES_HOST" = "/run/postgresql";
+          "POSTGRES_USER" = "bitmagnet";
+          "POSTGRES_NAME" = "bitmagnet";
         };
-        environmentFiles = [ "/var/lib/docker-compose-env/bitmagnet.env" ];
+        environmentFiles = [ "/var/lib/native-services-migration/bitmagnet.env" ];
         ports = [ "3333:3333" "3334:3334" "3334:3334/udp" ];
         networks = [ "bitmagnet_default" ];
-        dependsOn = [ "bitmagnet-postgres" ];
+        volumes = [ "/run/postgresql:/run/postgresql:ro" ];
         cmd = [ "worker" "run" "--keys=http_server" "--keys=queue_server" "--keys=dht_crawler" ];
         extraOptions = [ "--network-alias=bitmagnet" ];
-      };
-
-      "bitmagnet-postgres" = {
-        image = "postgres:16-alpine";
-        autoStart = true;
-        environment = {
-          "PGUSER" = "postgres";
-          "POSTGRES_DB" = "bitmagnet";
-        };
-        environmentFiles = [ "/var/lib/docker-compose-env/bitmagnet-postgres.env" ];
-        volumes = [ "/etc/docker-compose/bitmagnet/bitmagnet/postgres:/var/lib/postgresql/data:Z" ];
-        networks = [ "bitmagnet_default" ];
-        extraOptions = [ "--network-alias=postgres" "--shm-size=1073741824" "--health-cmd=pg_isready -U postgres" "--health-interval=10s" "--health-start-period=2m0s" ];
       };
 
       "chiyogami" = {
@@ -219,7 +134,7 @@ in
           "TZ" = "America/Chicago";
         };
         ports = [ "9900:80" ];
-        volumes = [ "/var/www/FreshRSS:/config" "freshrss_data:/var/www/FreshRSS/data" "freshrss_extensions:/var/www/FreshRSS/extensions" ];
+        volumes = [ "/run/postgresql:/run/postgresql:ro" "/var/www/FreshRSS:/config" "freshrss_data:/var/www/FreshRSS/data" "freshrss_extensions:/var/www/FreshRSS/extensions" ];
         networks = [ "freshrss_default" ];
         extraOptions = [ "--network-alias=freshrss" "--add-host=host.docker.internal=host-gateway" ];
       };
@@ -286,7 +201,7 @@ in
 
       "radarr" = {
         image = "lscr.io/linuxserver/radarr:latest";
-        autoStart = true;
+        autoStart = false;
         environment = {
           "PGID" = "1000";
           "PUID" = "1000";
@@ -300,7 +215,7 @@ in
 
       "sonarr" = {
         image = "lscr.io/linuxserver/sonarr:latest";
-        autoStart = true;
+        autoStart = false;
         environment = {
           "PGID" = "1000";
           "PUID" = "1000";

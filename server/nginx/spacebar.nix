@@ -12,25 +12,7 @@
     ];
     locations."/" = {
       priority = 100;
-      proxyPass = "http://127.0.0.1:3001";
-      extraConfig = ''
-        proxy_set_header Host $host;
-        proxy_pass_request_headers on;
-        add_header Last-Modified $date_gmt;
-        add_header Cache-Control 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-Proto https;
-        proxy_set_header X-Forwarded-For $remote_addr;
-        proxy_set_header X-Forwarded-Host $remote_addr;
-        proxy_no_cache 1;
-        proxy_cache_bypass 1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
-        add_header X-Frame-Options SAMEORIGIN;
-        add_header X-Content-Type-Options nosniff;
-        add_header X-XSS-Protection "1; mode=block";
-        add_header Referrer-Policy no-referrer-when-downgrade;
-      '';
+      return = "410";
     };
     locations."/.well-known/spacebar" = {
       priority = 101;

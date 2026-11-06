@@ -13,7 +13,7 @@
     ];
     locations."/" = {
       priority = 100;
-      proxyPass = "http://192.168.1.2:3005";
+      proxyPass = "http://127.0.0.1:3005";
       extraConfig = ''
         proxy_http_version 1.1;
         proxy_read_timeout 300;

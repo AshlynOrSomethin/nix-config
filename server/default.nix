@@ -4,6 +4,8 @@
     ./hardware-configuration.nix
     ./mounts.nix
     ./docker.nix
+    ./native-services.nix
+    ./monitoring.nix
     ./system.nix
     ./network.nix
     ./services.nix

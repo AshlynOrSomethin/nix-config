@@ -1,0 +1,280 @@
+Native service migration
+========================
+
+Native monitoring
+-----------------
+
+Gatus is free/open-source software under Apache 2.0. server/monitoring.nix
+configures its monitors declaratively: eleven running application health
+checks and SSH, every minute. It runs as a static unprivileged gatus account,
+uses peer authentication to its native PostgreSQL database over a Unix socket,
+and receives daily database backups. It listens only on 127.0.0.1:3001 behind
+https://uptime.pulsar.ltd; spacebar is not used for monitoring.
+
+These are local application checks, not external DNS/TLS availability probes.
+No notification destinations have been configured. Old Kuma monitoring
+history is not imported.
+
+After building the system, activate, verify all twelve monitors have recorded
+successful results in PostgreSQL, persist the boot configuration, and delete
+the explicitly retired Kuma-only data with:
+
+  sudo /etc/nixos/result-native-migration/sw/bin/gatus-transition \
+    --system /etc/nixos/result-native-migration --delete-kuma-data
+
+Cleanup removes /etc/docker-compose/UptimeKuma/data, /var/lib/uptime-kuma and
+/var/lib/private/uptime-kuma, plus Kuma-only application directories, SQL dumps
+and row-count files inside timestamped native-services/shared-mariadb backups
+and their unfinished-native-copies subdirectories. It retains all other
+application backups and shared multi-application database recovery directories,
+which can still contain historical Kuma tables. A deletion manifest remains
+under /var/lib/gatus-transition. Cleanup happens only after monitoring passes.
+Old backup manifests are adjusted when a Kuma-only SQL dump is removed.
+The helper runs the target system's idempotent PostgreSQL setup as postgres
+before activation, so Gatus cannot race an old setup unit during the switch.
+This provisions the new role/database without restarting database clients.
+If activation fails, no Kuma cleanup or boot-profile update takes place;
+correct the failure and rerun the command.
+The first-stage migration/rollback tools are historical and must not be used
+to restore Kuma after this cleanup.
+
+Grimmory 3.5.0 still needs its separate MariaDB: its shipped Java application
+contains the MariaDB JDBC driver and MySQL Flyway plugin/migrations, not a
+PostgreSQL driver or PostgreSQL migration set. A connection-string change or
+data-only conversion does not make that application PostgreSQL-compatible.
+
+Authentik and Panel OAuth
+------------------------
+
+Both authentik.pulsar.ltd proxy routes (including the embedded outpost) use
+the host's HTTP port 9180, not container ports 9000/9443. TLS terminates at
+Nginx. Authentik remains containerized with native PostgreSQL storage.
+
+The Pelican Panel application has slug pelican and a confidential OAuth
+provider allowing only the authorization-code grant and this strict callback:
+
+  https://panel.pulsar.ltd/auth/oauth/callback/authentik
+
+It uses explicit consent and the openid, email and profile scope mappings.
+Panel's existing client credentials remain in its runtime .env, never in Nix
+configuration or the store. Its automatic account creation and email-based
+account linking remain disabled; existing users link Authentik explicitly
+from their authenticated Panel profile. Local Panel login remains available.
+Provider/application configuration is stored in the backed-up Authentik
+database, and Panel user links are stored in the backed-up Panel database.
+
+Shared MariaDB retirement (second stage)
+---------------------------------------
+
+FreshRSS remains in its matching-version Docker image but now uses native
+PostgreSQL through /run/postgresql with a dedicated SCRAM-authenticated role.
+Pelican Panel uses native PostgreSQL with peer authentication for its own
+non-superuser account. APP_KEY and all unrelated application settings remain
+unchanged. Both databases receive the existing daily PostgreSQL backups.
+
+MariaDB represents JSON as text, so pgloader alone does not reproduce Panel's
+PostgreSQL JSON schema. The migration explicitly converts the twenty JSON
+columns declared by the installed Panel migrations before application checks
+and dump/restore. It preserves their exact text values, including duplicates
+and NULL, and tests the notification JSON query used by authenticated pages.
+For an already migrated database, run the newly built helper with
+--repair-panel-json (without --system). This takes a full PostgreSQL backup
+under /var/backups/pelican-json, then converts and checks every affected value
+in a single transaction. Invalid JSON, unexpected types or lock timeouts abort
+the entire repair. Existing application data is never reimported.
+
+Uptime Kuma is retired because its installed version does not support
+PostgreSQL. Its state, MariaDB database, and original container data are
+retained, not deleted. Its former homepage returns HTTP 410. No monitoring
+replacement is installed automatically. Grimmory's separate MariaDB is
+unaffected, as are Wings and game containers.
+
+Build the configuration with path:/etc/nixos as below, then run:
+
+  sudo /etc/nixos/result-native-migration/sw/bin/shared-mariadb-migrate \
+    --system /etc/nixos/result-native-migration
+
+Do not run an ordinary switch before this command. FreshRSS and every Pelican
+writer/deployment unit require /var/lib/shared-mariadb-migration/ready so they
+cannot start against unpopulated PostgreSQL databases.
+
+This command refuses existing destination databases or prior migration state,
+and any Docker/containerd/Wings supervisor change. No game restart is needed.
+It stops FreshRSS, Panel workers/web/scheduler and Kuma, takes private backups
+under /var/backups/shared-mariadb/<timestamp>, and imports into an isolated,
+Unix-socket-only PostgreSQL cluster first. pgloader errors are fatal even if it
+returns exit status zero. Explicit bigint and FreshRSS tinyint casts preserve
+foreign-key compatibility and the application's supported PostgreSQL types.
+Unsigned bigint range checks reject overflow rather than truncating.
+
+Every cell in every table is compared via counted SHA-256 row fingerprints,
+including duplicate rows, NULL vs empty strings, full UTF8MB4 Unicode, binary
+data, and UTC timestamps. All source foreign keys must exist and validate;
+source AUTO_INCREMENT next values are explicitly restored and checked. Both
+installed applications are booted against copies and the isolated database,
+and Panel's migrate command must succeed without changing its migration ledger.
+FreshRSS IDs are preserved rather than reassigned by the SQLite transfer tool.
+
+The shared MariaDB is then stopped and its entire data directory backed up,
+including retained historical Forgejo and Kuma databases. It is removed from
+the target configuration but /var/lib/mariadb is never deleted. Application
+configuration changes only after these backups and rehearsal succeed.
+Converted dumps are restored with dedicated non-superuser owners; complete row,
+constraint and sequence proofs must match again before writers are allowed.
+
+Before native writers start, failures restore source application configurations
+and the original system/services. Converted copies are retained for diagnosis.
+There is deliberately no overwrite/retry option: review any failed attempt
+before touching its restored databases. After native writers start, failures
+never automatically roll back, since that could discard new writes.
+
+After correcting a post-writer configuration failure, finish without
+reimporting or resetting any data:
+
+  sudo /etc/nixos/result-native-migration/sw/bin/shared-mariadb-migrate \
+    --system /etc/nixos/result-native-migration \
+    --finish /var/backups/shared-mariadb/<interrupted-timestamp>
+
+Finalization verifies application HTTP health, actual database backend, active
+writers, retired services and failed units, then persists the system profile
+and boot configuration. Backups and original data remain. Avoid rolling back
+to first-stage snapshots after this second stage without accounting for newer
+FreshRSS/Panel data.
+
+An unprivileged, source-read-only rehearsal is also available before cutover:
+
+  /etc/nixos/result-native-migration/sw/bin/shared-mariadb-migrate --rehearse
+
+Failures retain private temporary diagnostics. Successful rehearsal cleans up
+only its own temporary directory and never changes source applications.
+
+First-stage migration (historical)
+--------------------------------
+
+Scope: Audiobookshelf 2.37.2, Forgejo 17.0.1, Uptime Kuma 2.5.9,
+standard upstream SearXNG, and the Authentik/Bitmagnet PostgreSQL 16
+databases. Other application containers and Pelican/Wings stay unchanged.
+Uptime Kuma and FreshRSS still need the existing shared MariaDB container.
+Grimmory still needs its separate MariaDB container.
+Bazarr, Radarr, and Sonarr were inactive and remain configured for manual start
+(autoStart = false), so this cutover does not inadvertently bring them online.
+
+Do not run nixos-rebuild switch before the migration. The native application
+units and the retained Authentik/Bitmagnet clients require the migration's
+ready marker, so an ordinary rebuild cannot start them against empty databases.
+
+Build the configuration, including new files (path flakes include untracked
+files), without updating flake.lock:
+
+  nix build path:/etc/nixos#nixosConfigurations.server.config.system.build.toplevel \
+    --out-link /etc/nixos/result-native-migration
+
+Review the changes, then run in an interactive terminal:
+
+  sudo /etc/nixos/result-native-migration/sw/bin/native-services-migrate \
+    --system /etc/nixos/result-native-migration
+
+Keep the terminal open. Bitmagnet is approximately 81 GB; full table counts,
+dump, restore, verification, and index rebuilding can take a long time.
+Migration requires at least three times the current PostgreSQL database size
+plus 10 GiB of free space on /var/lib. Backups and originals must not be deleted
+to make room during migration. Backups are on the same host, not off-site.
+
+The command refuses existing native data directories and a previous migration
+state. It verifies source versions, stops affected writers, and makes root-only
+backups under /var/backups/native-services/<timestamp>. These contain secrets.
+It preserves the old and new NixOS systems as GC roots. It leaves original
+application directories, MariaDB databases, PostgreSQL volume/bind data,
+and original environment files untouched.
+It checks complete units INCLUDING NixOS drop-ins. Changes to Wings are refused.
+Docker/containerd changes require explicit --allow-docker-restart authorization:
+even a Docker CLI wrapper path change in an ExecStart drop-in restarts the
+daemon and game containers. The engine is not being upgraded here. Locally
+cached application images are reused. The shared MariaDB unit waits for TCP
+readiness, and Pelican Panel's upgrade runs only after that readiness check.
+
+It copies application state, uses Forgejo's PostgreSQL-format export rather
+than loading MariaDB SQL into PostgreSQL, and restores both PostgreSQL dumps
+into separate non-superuser roles. It compares all table counts and PostgreSQL
+sequence values before allowing clients to start. Audiobookshelf's SQLite
+integrity and row counts are checked as well. Media paths remain available
+inside native service mount namespaces at their original container locations.
+Forgejo's SQL is parsed using PostgreSQL's grammar, not split with regular
+expressions. Foreign keys are added and validated after all tables and rows
+exist, supporting the forward/cyclic references in its export. The entire
+Forgejo SQL import is transactional; no foreign-key checks are disabled.
+Forgejo omits its own forgejo_version and forgejo_migration tables from its
+export. Their exact source schemas are checked and their rows explicitly
+converted too, retaining the migration ledger and avoiding rerunning old
+migrations on existing data.
+
+Forgejo retains its complete imported app.ini, including SMTP and encryption
+secrets. It is intentionally not declaratively regenerated: edit
+/var/lib/forgejo/gitea/conf/app.ini for settings after migration. Its native
+built-in SSH server listens on the old published port 222 using the existing
+host keys. Its advertised SSH_PORT is preserved from the old configuration.
+Only CAP_NET_BIND_SERVICE is granted for port 222; the service's private user
+namespace is disabled so that capability applies to the host network namespace.
+PostgreSQL explicitly disables all TCP listeners, including localhost.
+
+SearXNG intentionally switches from PrivAU to upstream, with a new secret,
+standard themes, local Valkey rate limiting, and the same reverse-proxy port.
+The PrivAU configuration/cache remains backed up and is not imported.
+Its health check uses /healthz; the homepage intentionally subjects automated
+requests to bot detection and is not a suitable health probe.
+
+On success the command verifies service health, updates the system profile,
+and installs the boot configuration. Daily native PostgreSQL backups retain
+the current and previous dumps under /var/backup/postgresql.
+
+Failure and rollback
+--------------------
+
+Before native writers start, failures restore the old system automatically.
+If health verification fails after writers start, the command leaves the new
+system running and reports the failure: automatically rolling back could lose
+new writes. Inspect journalctl and the root-only backup state.json.
+
+After correcting configuration and building a new system, finish such a cutover
+without copying or restoring any live data again:
+
+  sudo /etc/nixos/result-native-migration/sw/bin/native-services-migrate \
+    --system /etc/nixos/result-native-migration \
+    --finish /var/backups/native-services/<interrupted-timestamp>
+
+This requires the matching interrupted system and ready marker, checks Docker/
+Wings restart safety, activates the corrected system, starts failed writers,
+and repeats HTTP, container health, SSH host-key and failed-unit checks before
+persisting the system profile and boot configuration. Native data is retained.
+Add --allow-docker-restart only if its restart is authorized.
+
+Explicit rollback discards post-cutover changes in the copied applications
+and native databases. Confirm that trade-off before running:
+
+  sudo /etc/nixos/result-native-migration/sw/bin/native-services-migrate \
+    --rollback /var/backups/native-services/<timestamp> --accept-data-loss
+
+This removes the ready marker, stops new writers and native PostgreSQL, restores
+the old system/profile, and starts the original containers against their
+untouched data. Native copies and backups remain for investigation.
+The repository still contains the native configuration: do not rebuild it
+after rollback until the failure has been resolved. Do not remove destination
+directories or migration state just to force a retry.
+
+A failure before native writers started can be retried after the original
+system and containers are running:
+
+  sudo /etc/nixos/result-native-migration/sw/bin/native-services-migrate \
+    --system /etc/nixos/result-native-migration \
+    --retry /var/backups/native-services/<failed-timestamp> \
+    --allow-docker-restart
+
+Only use the final flag when a Docker/game restart is acceptable. The retry
+archives every unfinished native copy and migration state inside the previous
+backup's unfinished-native-copies directory; it deletes nothing, takes fresh
+backups of the now-current original data, and performs a new migration.
+
+Tests:
+
+  PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover \
+    -s tests -p test_native_services_migration.py -v

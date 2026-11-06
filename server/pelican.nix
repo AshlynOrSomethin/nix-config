@@ -1,4 +1,4 @@
-{ inputs, config, ... }:
+{ inputs, config, lib, ... }:
 {
   imports = [
     inputs.pelican-panel.nixosModules.wings
@@ -30,7 +30,16 @@
     };
   };
 
-  systemd.services.wings.serviceConfig.SupplementaryGroups = [ "nginx" ];
+  systemd.services = {
+    wings.serviceConfig.SupplementaryGroups = [ "nginx" ];
+  } // lib.genAttrs [
+    "pelican-panel-deploy" "pelican-panel-upgrade" "pelican-panel-queue"
+    "pelican-panel-schedule" "phpfpm-pelican-panel"
+  ] (_: {
+    unitConfig.ConditionPathExists = "/var/lib/shared-mariadb-migration/ready";
+    requires = [ "postgresql.target" ];
+    after = [ "postgresql.target" ];
+  });
 
   # upstream module sets this group on the user but never declares it
   users.groups.pelican-panel = {};

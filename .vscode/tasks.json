@@ -7,6 +7,17 @@
 			"command": "sudo nixos-rebuild switch --flake /etc/nixos#nixos",
 			"isBackground": false,
 			"problemMatcher": []
+		},
+		{
+			"label": "Run rebuild zsh function",
+			"type": "shell",
+			"command": "zsh",
+			"args": [
+				"-ic",
+				"rebuild"
+			],
+			"isBackground": false,
+			"problemMatcher": []
 		}
 	]
 }

@@ -28,11 +28,12 @@ in
   };
 
   home.packages = with pkgs; [
-    qbittorrent
     bitwarden-desktop
-    vesktop
     proton-cachyos
+    qbittorrent
+    vesktop
     wineWow64Packages.fonts
+    (wineWow64Packages.waylandFull.override { wineRelease = "staging"; })
     yabridge
     yabridgectl
     (discord.override {

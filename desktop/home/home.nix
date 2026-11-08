@@ -99,7 +99,6 @@ in
       exec ${wineForYabridge}/bin/wine "$@"
     '')
     (discord.override {
-      withOpenASAR = true;
       withVencord = true;
     })
     inputs.prismlauncher.packages.${pkgs.stdenv.hostPlatform.system}.prismlauncher

@@ -8,7 +8,6 @@ let
     };
     checkInputs = (old.checkInputs or []) ++ [ pkgs.libxkbcommon ];
   });
-  };
 in
 {
   home.stateVersion = "26.05";  # match your NixOS stateVersion

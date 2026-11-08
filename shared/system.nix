@@ -24,6 +24,12 @@
   }) ];
   nixpkgs.config.allowUnfree = true;
 
+  systemd.user.services = {
+    pipewire.restartIfChanged = false;
+    pipewire-pulse.restartIfChanged = false;
+    wireplumber.restartIfChanged = false;
+  };
+
   nix.package = pkgs.lixPackageSets.stable.lix;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 

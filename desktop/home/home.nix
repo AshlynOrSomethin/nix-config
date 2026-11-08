@@ -8,63 +8,6 @@ let
     };
     checkInputs = (old.checkInputs or []) ++ [ pkgs.libxkbcommon ];
   });
-
-  wineVersionLine = lib.removeSuffix "\n" (builtins.readFile "${inputs.wine-cachyos}/VERSION");
-  wineVersion =
-    if lib.hasPrefix "Wine version " wineVersionLine then
-      lib.removePrefix "Wine version " wineVersionLine
-    else
-      throw "Could not determine the CachyOS Wine version";
-  wineCachyos = { x11Support, waylandSupport }:
-    (pkgs.wineWow64Packages.full.override { inherit x11Support waylandSupport; }).overrideAttrs (old:
-      {
-        pname = "wine-cachyos";
-        version = "${wineVersion}-cachyos-${inputs.wine-cachyos.shortRev}";
-        src = inputs.wine-cachyos;
-        # CachyOS changes the context expected by nixpkgs' certificate patch.
-        patches = lib.filter
-          (patch: builtins.baseNameOf (toString patch) != "cert-path.patch")
-          old.patches;
-        nativeBuildInputs = old.nativeBuildInputs ++ [ pkgs.autoconf pkgs.perl pkgs.python3 ];
-        postPatch = (old.postPatch or "") + ''
-          substituteInPlace dlls/crypt32/unixlib.c \
-            --replace-fail \
-            'if ((additional_dir = getenv( "WINE_ADDITIONAL_CERTS_DIR" )))' \
-            'if ((additional_dir = getenv( "NIX_SSL_CERT_FILE" )))
-              import_certs_from_path( additional_dir, TRUE );
-
-          if ((additional_dir = getenv( "WINE_ADDITIONAL_CERTS_DIR" )))'
-        '';
-        preConfigure = (old.preConfigure or "") + ''
-          patchShebangs autogen.sh tools/make_requests tools/make_specfiles dlls/winevulkan/make_vulkan
-          XDG_CACHE_HOME="$TMPDIR" ./autogen.sh
-        '';
-        postInstall = (old.postInstall or "") + ''
-          # CachyOS's Proton loader expects 64-bit binaries in i386-unix.
-          if grep -Fq 'i386-unix/wine64-preloader' dlls/ntdll/unix/loader.c; then
-            mkdir -p "$out/lib/wine/i386-unix"
-            for loader in wine64 wine64-preloader; do
-              if [ ! -x "$out/lib/wine/x86_64-unix/$loader" ]; then
-                echo "CachyOS Wine loader $loader is missing" >&2
-                exit 1
-              fi
-              ln -s "../x86_64-unix/$loader" "$out/lib/wine/i386-unix/$loader"
-            done
-          fi
-        '';
-      }
-      // lib.optionalAttrs (!waylandSupport) {
-        configureFlags = old.configureFlags ++ [ "--without-wayland" ];
-      });
-  wineWayland = wineCachyos { x11Support = false; waylandSupport = true; };
-
-  # Yabridge embeds plugin editors through XWayland.
-  wineForYabridge = wineCachyos { x11Support = true; waylandSupport = false; };
-  yabridgeWinePackages = pkgs.wineWow64Packages // { yabridge = wineForYabridge; };
-  yabridge = pkgs.yabridge.override { wineWow64Packages = yabridgeWinePackages; };
-  yabridgectl = pkgs.yabridgectl.override {
-    inherit yabridge;
-    wineWow64Packages = yabridgeWinePackages;
   };
 in
 {
@@ -89,15 +32,10 @@ in
     qbittorrent
     bitwarden-desktop
     vesktop
-    wineWayland
+    proton-cachyos
     wineWow64Packages.fonts
     yabridge
     yabridgectl
-    # Wine's display driver is shared by processes using the same prefix.
-    (writeShellScriptBin "wine-yabridge" ''
-      export WINEPREFIX="''${WINEPREFIX:-$HOME/.wine-yabridge}"
-      exec ${wineForYabridge}/bin/wine "$@"
-    '')
     (discord.override {
       withVencord = true;
     })

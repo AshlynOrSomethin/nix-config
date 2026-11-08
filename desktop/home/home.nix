@@ -103,7 +103,6 @@ in
     })
     inputs.prismlauncher.packages.${pkgs.stdenv.hostPlatform.system}.prismlauncher
     inputs.serein.packages.${pkgs.stdenv.hostPlatform.system}.serein
-    topgrade
     satty
     papirus-icon-theme
     (writeShellApplication {

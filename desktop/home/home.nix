@@ -102,7 +102,7 @@ in
       withVencord = true;
     })
     inputs.prismlauncher.packages.${pkgs.stdenv.hostPlatform.system}.prismlauncher
-    inputs.serein.packages.${pkgs.stdenv.hostPlatform.system}.serein
+    #inputs.serein.packages.${pkgs.stdenv.hostPlatform.system}.serein
     satty
     papirus-icon-theme
     (writeShellApplication {

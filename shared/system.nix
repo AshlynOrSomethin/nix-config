@@ -16,6 +16,11 @@
       nix-eval-jobs
       nix-fast-build
       colmena;
+
+    uutils-findutils = prev.uutils-findutils.overrideAttrs (old: {
+      buildInputs = (old.buildInputs or [ ]) ++ [ final.oniguruma ];
+      nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ final.pkg-config ];
+    });
   }) ];
   nixpkgs.config.allowUnfree = true;
 

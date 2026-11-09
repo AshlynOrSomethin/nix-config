@@ -56,7 +56,7 @@ in
     libsecret
     lsd
     lunar-client
-    macchina
+    fastfetch
     nh
     nix-direnv
     nix-tree

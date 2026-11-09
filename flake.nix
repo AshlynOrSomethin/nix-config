@@ -107,12 +107,6 @@
 
     vscode-server.url = "github:nix-community/nixos-vscode-server";
 
-    # The rebuild helper advances this tag; nix flake update alone keeps it pinned.
-    wine-cachyos = {
-      url = "github:CachyOS/wine-cachyos/cachyos-11.0-20261015-proton";
-      flake = false;
-    };
-
   };
 
   outputs = { chaotic, dms, dux-files, home-manager, nix-flatpak, nixpkgs, qylock, vscode-server, ... }@inputs:

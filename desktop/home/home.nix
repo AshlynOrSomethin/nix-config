@@ -30,7 +30,10 @@ in
         scrolling.default_extent_fraction = 0.5;
       };
 
-      input.cursor.theme = "Breeze-Adapta-Cursor";
+      input.cursor = {
+        theme = "Breeze-Adapta-Cursor";
+        size = 20;
+      };
 
       keybinds = {
         "Mod+Shift+Slash" = "cheatsheet-toggle";

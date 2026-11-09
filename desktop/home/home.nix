@@ -223,6 +223,7 @@
 
   home.packages = with pkgs; [
     bitwarden-desktop
+    pear-desktop
     pipeweaver
     proton-cachyos_x86_64_v3
     qbittorrent

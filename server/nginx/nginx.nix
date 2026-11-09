@@ -42,6 +42,7 @@
     ./paste.nix
     ./pelican.nix
     ./php.nix
+    ./pipeweaver.nix
     ./plex.nix
     ./portainer.nix
     ./prowlarr.nix

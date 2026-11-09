@@ -31,6 +31,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v1.2.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     jj = {
       url = "github:jj-vcs/jj";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -142,6 +147,7 @@
         configuration = ./desktop/default.nix;
         home = ./desktop/home/home.nix;
         extraModules = [
+          inputs.lanzaboote.nixosModules.lanzaboote
           dms.nixosModules.dank-material-shell
           qylock.nixosModules.default
           nix-flatpak.nixosModules.nix-flatpak

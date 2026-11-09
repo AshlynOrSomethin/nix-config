@@ -3,6 +3,7 @@
     ../shared
     ./hardware-configuration.nix
     ./system.nix
+    ./boot.nix
     ./network.nix
     ./services.nix
     ./packages.nix

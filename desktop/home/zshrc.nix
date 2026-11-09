@@ -183,7 +183,7 @@
 
       # Fastfetch startup prompt check
       if [[ -o interactive ]] && [[ -t 1 ]] && command -v fastfetch > /dev/null 2>&1; then
-        "$HOME/.config/fastfetch/ffbox.sh"
+        "fastfetch"
       fi
     '';
   };

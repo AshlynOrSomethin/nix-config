@@ -1,14 +1,4 @@
 { config, lib, pkgs, inputs, ... }:
-let
-  satty = pkgs.satty.overrideAttrs (old: {
-    version = "unstable-${inputs.satty.shortRev}";
-    src = inputs.satty;
-    cargoDeps = pkgs.rustPlatform.importCargoLock {
-      lockFile = "${inputs.satty}/Cargo.lock";
-    };
-    checkInputs = (old.checkInputs or []) ++ [ pkgs.libxkbcommon ];
-  });
-in
 {
   home.stateVersion = "26.05";  # match your NixOS stateVersion
   imports = [
@@ -232,7 +222,6 @@ in
     pipeweaver
     proton-cachyos_x86_64_v3
     qbittorrent
-    slurp
     vesktop
     wineWow64Packages.fonts
     (wineWow64Packages.waylandFull.override { wineRelease = "staging"; })
@@ -243,27 +232,28 @@ in
     })
     inputs.prismlauncher.packages.${pkgs.stdenv.hostPlatform.system}.prismlauncher
     #inputs.serein.packages.${pkgs.stdenv.hostPlatform.system}.serein
-    satty
     papirus-icon-theme
     (writeShellApplication {
       name = "screenshot-annotate";
       runtimeInputs = [
         coreutils
-        inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.dms-shell
-        satty
+        grim
+        slurp
+        swappy
       ];
       text = ''
-        screenshot=$(mktemp --suffix=.png)
-        trap 'rm -f "$screenshot"' EXIT
-
-        dms screenshot --stdout --no-confirm > "$screenshot"
-        if [[ ! -s "$screenshot" ]]; then
+        if ! geometry=$(slurp); then
           exit 0
         fi
 
+        screenshot=$(mktemp --suffix=.png)
+        trap 'rm -f "$screenshot"' EXIT
+
+        grim -g "$geometry" "$screenshot"
+
         mkdir -p "$HOME/Screenshots"
-        satty --filename "$screenshot" \
-          --output-filename "$HOME/Screenshots/Screenshot-%Y-%m-%d-%H-%M-%S.png"
+        swappy -f "$screenshot" \
+          -o "$HOME/Screenshots/Screenshot-$(date +%Y-%m-%d-%H-%M-%S).png"
       '';
     })
     (writeShellScriptBin "rofi-launcher" ''

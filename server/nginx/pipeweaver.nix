@@ -25,7 +25,7 @@
     ];
     locations."/" = {
       priority = 100;
-      proxyPass = "http://192.168.2.2:14565";
+      proxyPass = "http://192.168.1.3:14565";
       proxyWebsockets = true;
       extraConfig = ''
         proxy_set_header Host $host;

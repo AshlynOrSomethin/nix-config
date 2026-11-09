@@ -29,7 +29,9 @@ in
 
   home.packages = with pkgs; [
     bitwarden-desktop
-    proton-cachyos
+    pipeweaver
+    proton-cachyos_x86_64_v3
+    proton-ge-custom
     qbittorrent
     vesktop
     wineWow64Packages.fonts

@@ -664,6 +664,22 @@
         "type": "github"
       }
     },
+    "pipeweaver": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791304614,
+        "narHash": "sha256-nw1Srx4M7c/MMsJNU6XQvlsjwa9perI8Ohqlxd8IBW8=",
+        "owner": "pipeweaver",
+        "repo": "pipeweaver",
+        "rev": "006b04514ab4241fb2b7e845c33e743ecdf27977",
+        "type": "github"
+      },
+      "original": {
+        "owner": "pipeweaver",
+        "repo": "pipeweaver",
+        "type": "github"
+      }
+    },
     "prismlauncher": {
       "inputs": {
         "libnbtplusplus": "libnbtplusplus",
@@ -759,6 +775,7 @@
         "nix-your-shell": "nix-your-shell",
         "nixpkgs": "nixpkgs_2",
         "pelican-panel": "pelican-panel",
+        "pipeweaver": "pipeweaver",
         "prismlauncher": "prismlauncher",
         "proxmox-nixos": "proxmox-nixos",
         "qylock": "qylock",

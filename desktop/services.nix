@@ -23,4 +23,20 @@
     alsa.support32Bit = true;
     pulse.enable = true;
   };
+
+  networking.firewall.allowedTCPPorts = [ 14565 ];
+
+  systemd.user.services.pipeweaver = {
+    description = "Pipeweaver audio routing and web UI (port 14565)";
+    wantedBy = [ "pipewire.service" ];
+    after = [ "pipewire.service" "wireplumber.service" ];
+    requires = [ "pipewire.service" ];
+    # Keep audio routes intact on switch; new versions apply on the next start.
+    restartIfChanged = false;
+    serviceConfig = {
+      ExecStart = "${pkgs.pipeweaver}/bin/pipeweaver-daemon --background";
+      Restart = "on-failure";
+      RestartSec = 5;
+    };
+  };
 }

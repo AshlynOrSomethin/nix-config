@@ -54,6 +54,12 @@
     };
 
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+    # Follow upstream; the rebuild helper updates the locked revision each time.
+    pipeweaver = {
+      url = "github:pipeweaver/pipeweaver";
+      flake = false;
+    };
     
     prismlauncher = {
         url = "github:prismlauncher/PrismLauncher";
@@ -112,6 +118,13 @@
             home-manager.nixosModules.home-manager
           ] ++ extraModules ++ [
             {
+              nixpkgs.overlays = [
+                (final: prev: {
+                  pipeweaver = final.callPackage ./packages/pipeweaver.nix {
+                    src = inputs.pipeweaver;
+                  };
+                })
+              ];
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = { inherit inputs; };

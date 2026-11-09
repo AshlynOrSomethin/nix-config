@@ -71,6 +71,7 @@ in
     ripgrep
     ruffle
     rustc
+    sbctl
     sequoia-chameleon-gnupg
     sequoia-sq
     sequoia-sqv

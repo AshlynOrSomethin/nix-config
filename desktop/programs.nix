@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }:
+{ pkgs, ... }:
 
 {
   programs.qylock = {
@@ -7,8 +7,9 @@
     quickshell.enable = false;
   };
 
-  programs.niri.enable = true;
-  programs.niri.package = inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri;
+  # programs.niri.enable = true;
+  # programs.niri.package = inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri;
+  programs.umbriel.enable = true;
   programs.dank-material-shell = {
     enable = true;
     enableCalendarEvents = false;

@@ -41,10 +41,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    niri = {
-      url = "github:niri-wm/niri";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # niri = {
+    #   url = "github:niri-wm/niri";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
+
+    umbriel.url = "github:noctalia-dev/umbriel";
 
     nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
 
@@ -148,6 +150,7 @@
         home = ./desktop/home/home.nix;
         extraModules = [
           inputs.lanzaboote.nixosModules.lanzaboote
+          inputs.umbriel.nixosModules.default
           dms.nixosModules.dank-material-shell
           qylock.nixosModules.default
           nix-flatpak.nixosModules.nix-flatpak

@@ -412,11 +412,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1794126013,
-        "narHash": "sha256-Tk0b/Tf5xKUAqZVzh1P1aB8FJnSu8/W+B+Hx9V+Fe7Q=",
+        "lastModified": 1794241516,
+        "narHash": "sha256-933qhHTs/wTxMgkiEAcdqU7CXWNJU2d+2vQAH1RozbU=",
         "owner": "sinelaw",
         "repo": "fresh",
-        "rev": "81e1ff435a428439492a4e52bac0a31634021963",
+        "rev": "bc39b45773bc3a4d7f19169a76efea924c3c7a00",
         "type": "github"
       },
       "original": {
@@ -453,11 +453,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793979366,
-        "narHash": "sha256-7OoWDsYO9teiPxl0QdlS5lYE20Pue8/5mpscSL32FUA=",
+        "lastModified": 1794252721,
+        "narHash": "sha256-sD1rhEjMghSyWSUG2xEOw+FOVd2wnoWwi/809w8fRkI=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "2c0c1f01521469cf0271180c453c79782d53c2f6",
+        "rev": "f1db7c474bb49babfe9d8def532939e0c7404327",
         "type": "github"
       },
       "original": {
@@ -475,11 +475,11 @@
         "rust-overlay": "rust-overlay_2"
       },
       "locked": {
-        "lastModified": 1794223835,
-        "narHash": "sha256-8h7IrqyVZ7boIzt1FjNS/nncq5EVoYRnBMTTQGw02Ds=",
+        "lastModified": 1794251305,
+        "narHash": "sha256-Gkbcy+prqYSroCfYOynbB7VSoE7K204CYTMRhzaYKiQ=",
         "owner": "jj-vcs",
         "repo": "jj",
-        "rev": "b92ca79852ff251e57ffce9f4540d5eae22332ae",
+        "rev": "8b01a3de59b1b3a8e12a2b6a90a26650b488dc43",
         "type": "github"
       },
       "original": {
@@ -525,26 +525,6 @@
       "original": {
         "owner": "PrismLauncher",
         "repo": "libnbtplusplus",
-        "type": "github"
-      }
-    },
-    "niri": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1794203352,
-        "narHash": "sha256-Olv3oXpH+E2AicKSb0Ggem1AW5hDEJEt7J/HDu1IGgk=",
-        "owner": "niri-wm",
-        "repo": "niri",
-        "rev": "5935130029941411d9c00784a974a77f244ea3b5",
-        "type": "github"
-      },
-      "original": {
-        "owner": "niri-wm",
-        "repo": "niri",
         "type": "github"
       }
     },
@@ -699,6 +679,19 @@
         "type": "github"
       }
     },
+    "nixpkgs_3": {
+      "locked": {
+        "lastModified": 1793876309,
+        "narHash": "sha256-Q62pssAT9r01POiSyXW0IPXBWhntiKqMhzlsp3bsl5I=",
+        "rev": "f9a75f41be3a74eab55d3a7679d34ad6cc0da977",
+        "type": "tarball",
+        "url": "https://releases.nixos.org/nixos/unstable/nixos-26.11pre1108983.f9a75f41be3a/nixexprs.tar.xz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://channels.nixos.org/nixos-unstable/nixexprs.tar.xz"
+      }
+    },
     "pelican-panel": {
       "inputs": {
         "nixpkgs": [
@@ -765,11 +758,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1794161639,
-        "narHash": "sha256-ZKTpsphOuw+0d1538PmfqCCnlAToShdKbsDH/pyb6gI=",
+        "lastModified": 1794242594,
+        "narHash": "sha256-512hMejxP/SzovvstXZd7BfMAhCfGMymrc3ymljsnIY=",
         "owner": "prismlauncher",
         "repo": "PrismLauncher",
-        "rev": "7cbd4735fedd5558e0813097e09b5d03d7a325fc",
+        "rev": "00f216ce54b7c8170c69e2c9c60937137cbfda0d",
         "type": "github"
       },
       "original": {
@@ -847,7 +840,6 @@
         "home-manager": "home-manager_2",
         "jj": "jj",
         "lanzaboote": "lanzaboote",
-        "niri": "niri",
         "nix-flatpak": "nix-flatpak",
         "nix-vscode-extensions": "nix-vscode-extensions",
         "nix-your-shell": "nix-your-shell",
@@ -861,6 +853,7 @@
         "satty": "satty",
         "serein": "serein",
         "sops-nix": "sops-nix",
+        "umbriel": "umbriel",
         "vscode-server": "vscode-server",
         "wine-cachyos": "wine-cachyos"
       }
@@ -970,11 +963,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1794236702,
-        "narHash": "sha256-jalHhSyUOg1qP/vjfhc6apk2xUbgcWhS1Vkbf9HviN4=",
+        "lastModified": 1794248047,
+        "narHash": "sha256-cPgy8/EGIQGzaEg57kUQC3gsb806YJ9Bgcw9hsHimRQ=",
         "owner": "ViceVerse-cz",
         "repo": "Serein",
-        "rev": "8babeff999d61b8986379867e54511d320bf9e15",
+        "rev": "a7d57c6846c3eef41ecd8825b08bb413464b3309",
         "type": "github"
       },
       "original": {
@@ -1063,6 +1056,25 @@
         "type": "github"
       }
     },
+    "umbriel": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_3",
+        "xdg-desktop-portal-umbriel": "xdg-desktop-portal-umbriel"
+      },
+      "locked": {
+        "lastModified": 1794235787,
+        "narHash": "sha256-r2gk56nlrvI1j7ypEoIZiggYsBuK5nxegWbtsQ2oSxI=",
+        "owner": "noctalia-dev",
+        "repo": "umbriel",
+        "rev": "0a22bd2431b8d735ffc6dbb47e29b5b1fdcd5b02",
+        "type": "github"
+      },
+      "original": {
+        "owner": "noctalia-dev",
+        "repo": "umbriel",
+        "type": "github"
+      }
+    },
     "utils": {
       "inputs": {
         "systems": "systems_3"
@@ -1113,6 +1125,27 @@
         "owner": "CachyOS",
         "ref": "cachyos-11.0-20261015-proton",
         "repo": "wine-cachyos",
+        "type": "github"
+      }
+    },
+    "xdg-desktop-portal-umbriel": {
+      "inputs": {
+        "nixpkgs": [
+          "umbriel",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1793975757,
+        "narHash": "sha256-27TZy17ok3p11A5Av1X/FG5BFyvHUsHsQiYyesij250=",
+        "owner": "noctalia-dev",
+        "repo": "xdg-desktop-portal-umbriel",
+        "rev": "56951426eb9931db3f1c57348f226c2427fba4f3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "noctalia-dev",
+        "repo": "xdg-desktop-portal-umbriel",
         "type": "github"
       }
     }

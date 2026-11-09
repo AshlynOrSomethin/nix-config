@@ -412,11 +412,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1794241516,
-        "narHash": "sha256-933qhHTs/wTxMgkiEAcdqU7CXWNJU2d+2vQAH1RozbU=",
+        "lastModified": 1794256343,
+        "narHash": "sha256-+HGg6idt98Y7R8NZgRMts53nLaskZRJwTpSW9b3E4Tg=",
         "owner": "sinelaw",
         "repo": "fresh",
-        "rev": "bc39b45773bc3a4d7f19169a76efea924c3c7a00",
+        "rev": "c3ff2ff43d7574e9494ab83900f33bcb182b7f0b",
         "type": "github"
       },
       "original": {

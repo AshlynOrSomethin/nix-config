@@ -30,6 +30,8 @@ in
         scrolling.default_extent_fraction = 0.5;
       };
 
+      input.cursor.theme = "Breeze-Adapta-Cursor";
+
       keybinds = {
         "Mod+Shift+Slash" = "cheatsheet-toggle";
 
@@ -208,6 +210,11 @@ in
         "Mod+Shift+P" = "dpms-off";
       };
     };
+  };
+
+  home.sessionVariables = {
+    XCURSOR_THEME = "Breeze-Adapta-Cursor";
+    XCURSOR_PATH = "${config.home.homeDirectory}/.local/share/icons:/run/current-system/sw/share/icons";
   };
 
   programs.rofi.enable = true;

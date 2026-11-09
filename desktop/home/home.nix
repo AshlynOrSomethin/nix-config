@@ -39,7 +39,6 @@ in
         "Mod+Shift+Slash" = "cheatsheet-toggle";
 
         "Mod+T" = "spawn ghostty";
-        "Mod+D" = "spawn fuzzel";
         "Mod+R" = "spawn rofi-launcher";
         "Super+Alt+L" = "spawn swaylock";
         "Super+Alt+S" = {

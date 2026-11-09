@@ -76,11 +76,23 @@
       ping = "gping";
       dig = "doggo";
       http = "xh";
+      cat = "bat";
+
+      # --- Search, diffs, and utilities ---
+      ffind = "fd";
+      fuzz = "fzf";
+      dshow = "delta";
+      bench = "hyperfine";
+      wx = "watchexec";
+      extract = "ouch decompress";
+      compress = "ouch compress";
 
       # --- TUIs ---
       lg = "lazygit";
       ld = "lazydocker";
       sctl = "systemctl-tui";
+      zj = "zellij";
+      zja = "zellij attach";
 
       # --- NixOS (nh / nvd / nix-tree) ---
       nrs = "nh os switch /etc/nixos --hostname desktop";

@@ -26,6 +26,7 @@ in
     mplus-outline-fonts.githubRelease
     dina-font
     proggyfonts
+    terminus_font
 
     # Microsoft fonts
     corefonts    # Andale Mono, Arial, Arial Black, Comic Sans MS, Courier New,

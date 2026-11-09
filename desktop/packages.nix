@@ -18,18 +18,22 @@ in
 {
   environment.systemPackages = with pkgs; [
     atuin
+    bat
     bitwarden-cli
     btop
     cargo
     comma
+    delta
     direnv
     doggo
     duf
     dust
     efibootmgr
+    fd
     ffmpeg
     firefox
     fuzzel
+    fzf
     gh
     ghostty
     git
@@ -44,6 +48,7 @@ in
     gst_all_1.gst-plugins-ugly
     gst_all_1.gstreamer
     hyfetch
+    hyperfine
     inotify-tools
     inputs.fresh.packages.${pkgs.stdenv.hostPlatform.system}.default
     inputs.jj.packages.${pkgs.stdenv.hostPlatform.system}.default
@@ -63,6 +68,7 @@ in
     nodejs
     nvd
     overskride
+    ouch
     pay-respects
     pinentry-qt
     procs
@@ -78,10 +84,12 @@ in
     sshfs
     systemctl-tui
     tealdeer
+    watchexec
     wget
     wl-clipboard
     xh
     xwayland-satellite
+    zellij
     zoxide
   ];
 }

@@ -1,6 +1,15 @@
 { pkgs, inputs, ... }:
 
 {
+  services.kmscon = {
+    enable = true;
+    useXkbConfig = true;
+    config = {
+      font-name = "Terminus";
+      hwaccel = true;
+    };
+  };
+
   services.displayManager.cosmic-greeter = {
     enable = true;
     package = inputs.cosmic-greeter.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {

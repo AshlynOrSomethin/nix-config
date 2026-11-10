@@ -16,6 +16,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     dux-files = {
       url = "github:duxlabs-dev/dux-files";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -162,10 +167,24 @@
           }
         ];
       };
+
+      ovhserver = mkHost {
+        host = "ovhserver";
+        configuration = ./ovhserver/default.nix;
+        home = ./ovhserver/home.nix;
+        extraModules = [
+          inputs.disko.nixosModules.disko
+          ./ovhserver/disk-config.nix
+          inputs.vscode-server.nixosModules.default
+          {
+            services.vscode-server.enable = true;
+          }
+        ];
+      };
     in
     {
       nixosConfigurations = {
-        inherit desktop server;
+        inherit desktop server ovhserver;
         nixos = desktop;
       };
     };

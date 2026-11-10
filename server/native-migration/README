@@ -1,6 +1,88 @@
 Native service migration
 ========================
 
+LuckPerms game database recovery
+-------------------------------
+
+The original shared-MariaDB migration selected FreshRSS and Panel explicitly;
+it did not migrate the game database s14_minecraft. Its original data remains
+in /var/lib/mariadb. server/luckperms.nix declares its dedicated PostgreSQL
+database/owner, SCRAM authentication and daily backup.
+
+The native PostgreSQL server still listens only on its Unix socket. A
+systemd socket proxy listens on 172.18.0.1:5432, bound to the pelican0 bridge
+device only, and forwards the PostgreSQL protocol to that socket. Clients
+must authenticate with the dedicated database password; PostgreSQL is not
+bound to the LAN/public interfaces.
+
+After building the system, run its luckperms-migrate helper with --system
+and the full built system store path. It clones the stopped, retained
+MariaDB directory, starts recovery MariaDB on a private Unix socket with
+networking/events/replication disabled, and saves a private source dump.
+It uses the installed LuckPerms JAR's PostgreSQL schema, converts permission
+booleans, preserves every value and source next ID, and rehearses the import
+in isolated PostgreSQL. The empty MariaDB messenger table is not recreated:
+PostgreSQL LuckPerms uses LISTEN/NOTIFY instead.
+
+Only after rehearsal does it activate the system, stop Velocity container
+ae52fc19-aa2d-4b93-850a-0fc31766c961, restore into an empty PostgreSQL database,
+verify all values/constraints/sequences, and replace that server's LuckPerms
+connection settings. Applying the new PostgreSQL authentication configuration
+briefly restarts PostgreSQL; Docker/Wings and other game containers are not
+restarted. It explicitly refreshes the target PostgreSQL configuration after
+activation, avoiding an old-unit startup race that can retain the old
+authentication file. Since hba_file is a startup-only parameter, an explicit
+PostgreSQL restart is required if the target path still has pending_restart.
+Local H2 databases and LuckPerms JSON exports remain untouched.
+The config backup, source dump, converted dump and recovery state are retained
+under /var/backups/luckperms/<timestamp>, readable only by root. The live
+plugin config is readable by its original owner/group, not world-readable.
+
+It verifies JDBC access from inside the game container using the installed
+PostgreSQL driver, checks actual LuckPerms startup, and saves the system
+profile/boot configuration only after success. On a failure after the import,
+fix the error and use --finish /var/backups/luckperms/<timestamp> with the
+corrected helper. If the game has not started yet, this rechecks the full
+import before changing its connection settings; if it has started, it
+restarts only Velocity for a clean startup check and verifies persistence.
+Neither mode restores over live permissions.
+Do not rerun an import or roll back the database after players can write.
+
+Additional LuckPerms servers
+---------------------------
+
+The luckperms-servers helper targets the four Bukkit volume UUIDs listed in
+luckperms-servers.py. --audit locates existing containers by volume mount,
+briefly stops only the H2 server if running, exports a read-only private copy
+using its installed H2 driver, then restores its prior running state. It
+reports additive rows and conflicts without changing PostgreSQL or configs.
+Absent containers are valid and remain uncreated.
+
+After reviewing the audit, --apply --keep-shared-players performs an offline
+cutover. All four targets must be stopped or absent; it refuses running
+targets rather than starting or restarting anything. It re-exports H2,
+refuses any permission or track conflicts, and keeps existing PostgreSQL
+player records when username/primary-group fields differ. Missing player
+records and nonconflicting permissions are still added. Permission contexts,
+negative values and expiry timestamps are retained. History is merged as a
+multiset, without duplicating already imported entries.
+
+Each run keeps original configs, a full pre-merge PostgreSQL dump, H2 copy
+and private merge plan under /var/backups/luckperms-servers/<timestamp>.
+The additive transaction locks all LuckPerms tables, rejects a stale plan,
+uses fresh serial IDs and verifies the exact original-plus-added rows before
+commit. It never restores over live data. The four configs reuse the working
+Velocity PostgreSQL credentials, preserve unrelated settings and ownership,
+and are replaced atomically with mode 0640. Original H2 files remain intact.
+The helper tests password authentication through the bridge TCP proxy.
+
+If a later config update fails, fix the reported error and rerun: the merge
+is idempotent and preserves the original player conflict policy. Do not
+restore the database backup after clients can write. Run `lpv sync` in the
+running Velocity console after merging to refresh its cached permissions.
+Start the Bukkit servers normally through Panel when wanted; their actual
+plugin startup can only be verified once they are started.
+
 Native monitoring
 -----------------
 

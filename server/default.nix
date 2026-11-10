@@ -6,6 +6,7 @@
     ./docker.nix
     ./native-services.nix
     ./monitoring.nix
+    ./luckperms.nix
     ./system.nix
     ./network.nix
     ./services.nix

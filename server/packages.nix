@@ -68,6 +68,7 @@ in
     wl-clipboard
     xh
     xwayland-satellite
+    yarn
     zoxide
   ];
 }

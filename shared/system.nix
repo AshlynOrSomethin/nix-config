@@ -2,12 +2,6 @@
 
 {
   boot.supportedFilesystems.zfs = lib.mkForce false;
-  boot.loader.grub = {
-    enable = true;
-    efiSupport = true;
-    device = "nodev";
-  };
-  boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_cachyos-lto-znver4;
 
   nixpkgs.overlays = [ (final: prev: {

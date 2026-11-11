@@ -17,8 +17,9 @@
     "rd.systemd.show_status=auto"
   ];
 
-  boot.loader.grub.enable = lib.mkForce false;
+  boot.loader.grub.enable = false;
   boot.loader.systemd-boot.enable = lib.mkForce false;
+  boot.loader.efi.canTouchEfiVariables = true;
 
   boot.lanzaboote = {
     enable = true;

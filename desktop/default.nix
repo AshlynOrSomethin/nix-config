@@ -1,6 +1,7 @@
 {
   imports = [
     ../shared
+    ../shared/puressh.nix
     ./hardware-configuration.nix
     ./system.nix
     ./boot.nix

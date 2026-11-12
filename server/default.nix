@@ -1,6 +1,7 @@
 {
   imports = [
     ../shared
+    ../shared/puressh.nix
     ./hardware-configuration.nix
     ./mounts.nix
     ./docker.nix

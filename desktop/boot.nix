@@ -3,13 +3,9 @@
 {
   environment.systemPackages = [ pkgs.sbctl ];
 
-  # Initialize graphics in the initrd so Plymouth can display the splash.
   boot.initrd.kernelModules = [ "amdgpu" ];
 
-  boot.plymouth = {
-    enable = true;
-    theme = "bgrt";
-  };
+  services.bootvine.enable = true;
   boot.consoleLogLevel = 3;
   boot.kernelParams = [
     "quiet"

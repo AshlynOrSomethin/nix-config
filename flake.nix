@@ -3,6 +3,11 @@
 
   inputs = {
 
+    bootvine = {
+      url = "git+https://codeberg.org/wvhulle/bootvine";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # No nixpkgs.follows here, on purpose, so the kernel patches match the cache.
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
 
@@ -104,7 +109,7 @@
     };
 
     pelican-panel = {
-      url = "github:mpeterson2/nix-pelican-panel";
+      url = "github:AshlynOrSomethin/nix-pelican-panel";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -148,6 +153,7 @@
         configuration = ./desktop/default.nix;
         home = ./desktop/home/home.nix;
         extraModules = [
+          inputs.bootvine.nixosModules.default
           inputs.lanzaboote.nixosModules.lanzaboote
           inputs.umbriel.nixosModules.default
           dms.nixosModules.dank-material-shell

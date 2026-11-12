@@ -1,6 +1,8 @@
 { config, pkgs, lib, inputs, ... }:
 
 {
+  home.packages = [ pkgs.nix-output-monitor ];
+
   # --- Tools that need shell integration ---
   programs.zoxide.enable = true;        # gives you `z` and `zi`
   programs.atuin.enable = true;         # takes over Ctrl+R / up-arrow
@@ -126,7 +128,7 @@
 
       # --- Custom Shell Functions ---
       rebuild() (
-        setopt noxtrace noverbose
+        setopt noxtrace noverbose pipefail
         local github_token
         github_token=$(<${lib.escapeShellArg config.sops.secrets.github-token.path}) || return 1
         if [[ -z "$github_token" ]]; then
@@ -148,7 +150,8 @@
 
           nix flake update &&
           jj commit -m 'Update NixOS configuration' &&
-          sudo --preserve-env=NIX_CONFIG nixos-rebuild switch --flake /etc/nixos#desktop &&
+          sudo -v &&
+          sudo --preserve-env=NIX_CONFIG nixos-rebuild switch --flake /etc/nixos#desktop --log-format internal-json -v 2>&1 | nom --json &&
           jj bookmark set main -r @- &&
           jj push --remote origin --bookmark main
       )

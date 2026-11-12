@@ -79,7 +79,6 @@
 
       # --- TUIs ---
       lg = "lazygit";
-      ld = "lazydocker";
       sctl = "systemctl-tui";
 
       # --- NixOS (nh / nvd / nix-tree) ---

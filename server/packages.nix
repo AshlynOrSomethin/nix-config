@@ -40,7 +40,6 @@ in
     inputs.jj.packages.${pkgs.stdenv.hostPlatform.system}.default
     jq
     killall
-    lazydocker
     lazygit
     libargon2
     libinput

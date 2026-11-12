@@ -45,7 +45,6 @@
     ./pipeweaver.nix
     ./plex.nix
     ./portainer.nix
-    ./prowlarr.nix
     ./proxmox.nix
     ./qbittorrent.nix
     ./radarr.nix

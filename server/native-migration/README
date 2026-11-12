@@ -1,6 +1,19 @@
 Native service migration
 ========================
 
+Historical migration notes
+--------------------------
+
+The procedures below describe the earlier Docker-based migrations. Their
+helpers are no longer installed on the Podman system and must not be run
+against live Podman data. The scripts and migration backups are retained for
+reference; recovering Docker requires restoring a suitable earlier NixOS
+generation and coordinating a separate application-data rollback.
+
+LuckPerms now reaches PostgreSQL at 10.245.0.1:5432 through the
+pelican-pod0 bridge. The native database still listens only on its Unix
+socket and authenticates clients as described below.
+
 LuckPerms game database recovery
 -------------------------------
 

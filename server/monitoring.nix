@@ -1,16 +1,6 @@
-{ config, lib, pkgs, ... }:
+{ lib, ... }:
 
 let
-  transition = pkgs.writeShellApplication {
-    name = "gatus-transition";
-    runtimeInputs = [
-      pkgs.coreutils pkgs.curl config.virtualisation.docker.package pkgs.nix
-      pkgs.postgresql_16 pkgs.python3 pkgs.systemd pkgs.util-linux
-    ];
-    text = ''
-      exec python3 ${./native-migration}/gatus-transition.py "$@"
-    '';
-  };
   httpChecks = {
     Audiobookshelf = "http://127.0.0.1:13378/healthcheck";
     Authentik = "http://127.0.0.1:9180/-/health/ready/";
@@ -21,13 +11,10 @@ let
     Grimmory = "http://127.0.0.1:6060/api/v1/healthcheck";
     iQbit = "http://127.0.0.1:8082/";
     "Pelican Panel" = "http://127.0.0.1:8080/";
-    Prowlarr = "http://127.0.0.1:9696/ping";
     SearXNG = "http://127.0.0.1:8842/healthz";
   };
 in
 {
-  environment.systemPackages = [ transition ];
-
   services.postgresql = {
     ensureDatabases = [ "gatus" ];
     ensureUsers = [{

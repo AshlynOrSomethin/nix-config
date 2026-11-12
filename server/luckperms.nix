@@ -1,29 +1,6 @@
 { config, lib, pkgs, ... }:
 
-let
-  migration = pkgs.writeShellApplication {
-    name = "luckperms-migrate";
-    runtimeInputs = [
-      pkgs.coreutils pkgs.curl config.virtualisation.docker.package pkgs.mariadb
-      pkgs.mariadb.client pkgs.nix pkgs.postgresql_16 pkgs.python3 pkgs.systemd pkgs.util-linux
-    ];
-    text = ''
-      exec python3 ${./native-migration}/luckperms.py "$@"
-    '';
-  };
-  servers = pkgs.writeShellApplication {
-    name = "luckperms-servers";
-    runtimeInputs = [
-      pkgs.coreutils config.virtualisation.docker.package pkgs.jdk21
-      pkgs.postgresql_16 pkgs.python3 pkgs.systemd pkgs.util-linux
-    ];
-    text = ''
-      exec python3 ${./native-migration}/luckperms-servers.py "$@"
-    '';
-  };
-in
 {
-  environment.systemPackages = [ migration servers ];
   services.postgresql = {
     ensureDatabases = [ "s14_minecraft" ];
     ensureUsers = [{
@@ -36,17 +13,19 @@ in
   };
   services.postgresqlBackup.databases = [ "s14_minecraft" ];
 
-  systemd.sockets.luckperms-postgresql = {
-    description = "PostgreSQL access on the Pelican bridge only";
+  systemd.sockets.luckperms-podman-postgresql = {
+    description = "PostgreSQL access on the Wings Podman bridge";
     wantedBy = [ "sockets.target" ];
+    requires = [ "podman-pelican-network.service" ];
+    after = [ "podman-pelican-network.service" ];
     socketConfig = {
-      ListenStream = "172.18.0.1:5432";
-      BindToDevice = "pelican0";
+      ListenStream = "10.245.0.1:5432";
+      BindToDevice = "pelican-pod0";
       NoDelay = true;
     };
   };
-  systemd.services.luckperms-postgresql = {
-    description = "Forward Pelican PostgreSQL connections to the native Unix socket";
+  systemd.services.luckperms-podman-postgresql = {
+    description = "Forward Wings Podman PostgreSQL connections to the native Unix socket";
     requires = [ "postgresql.target" ];
     after = [ "postgresql.target" ];
     serviceConfig = {

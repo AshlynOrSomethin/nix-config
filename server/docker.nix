@@ -3,34 +3,22 @@
 # Systemd replaces Compose as the container supervisor. Keep the runtime
 # environment files in /var/lib/docker-compose-env backed up separately.
 let
-  docker = "${config.virtualisation.docker.package}/bin/docker";
-  containerNames = [ "authentik-server-1" "authentik-worker-1" "bazarr" "bitmagnet" "chiyogami" "freshrss" "grimmory" "grimmory-mariadb-1" "iqbit" "prowlarr" "radarr" "sonarr" ];
+  podman = "${config.virtualisation.podman.package}/bin/podman";
+  containerNames = [ "authentik-server-1" "authentik-worker-1" "bazarr" "bitmagnet" "chiyogami" "freshrss" "grimmory" "grimmory-mariadb-1" "iqbit" "radarr" "sonarr" ];
   healthyContainers = [ "grimmory-mariadb-1" ];
-  # Retain legacy networks and volumes for rollback.
   networks = {
-    "audiobookshelf_default" = "bridge";
-    "forgejo_forgejo" = "bridge";
-    "searxng_default" = "bridge";
-    "uptimekuma_default" = "bridge";
-    "authentik_default" = "bridge";
-    "bazarr_default" = "bridge";
-    "bitmagnet_default" = "bridge";
-    "chiyogami_default" = "bridge";
-    "freshrss_default" = "bridge";
-    "grimmory_default" = "bridge";
-    "iqbit_default" = "bridge";
-    "prowlarr_default" = "bridge";
-    "radarr_default" = "bridge";
-    "sonarr_default" = "bridge";
-  };
-  volumes = {
-    "authentik_database" = "local";
-    "freshrss_data" = "local";
-    "freshrss_extensions" = "local";
+    "authentik_default" = "10.246.1.0/24";
+    "bazarr_default" = "10.246.2.0/24";
+    "bitmagnet_default" = "10.246.3.0/24";
+    "chiyogami_default" = "10.246.4.0/24";
+    "freshrss_default" = "10.246.5.0/24";
+    "grimmory_default" = "10.246.6.0/24";
+    "radarr_default" = "10.246.7.0/24";
+    "sonarr_default" = "10.246.8.0/24";
   };
   bindPaths = {
     "authentik-server-1" = [ "/run/postgresql" "/etc/docker-compose/authentik/data" "/etc/docker-compose/authentik/custom-templates" ];
-    "authentik-worker-1" = [ "/run/postgresql" "/var/run/docker.sock" "/etc/docker-compose/authentik/data" "/etc/docker-compose/authentik/certs" "/etc/docker-compose/authentik/custom-templates" ];
+    "authentik-worker-1" = [ "/run/postgresql" "/run/podman/podman.sock" "/etc/docker-compose/authentik/data" "/etc/docker-compose/authentik/certs" "/etc/docker-compose/authentik/custom-templates" ];
     "bazarr" = [ "/var/www/bazarr/config" "/Movies" "/TV" ];
     "bitmagnet" = [ "/run/postgresql" ];
     "chiyogami" = [ "/etc/docker-compose/chiyogami/pastes" ];
@@ -38,14 +26,13 @@ let
     "grimmory" = [ "/etc/docker-compose/grimmory/data" "/Books" "/etc/docker-compose/grimmory/bookdrop" ];
     "grimmory-mariadb-1" = [ "/etc/docker-compose/grimmory/mariadb/config" ];
     "iqbit" = [ "/etc/docker-compose/iQbit/server.js" ];
-    "prowlarr" = [ "/var/www/Prowlarr/data" ];
     "radarr" = [ "/var/www/radarr/data" "/Movies" "/media/md/Downloads" ];
     "sonarr" = [ "/var/www/sonarr/data" "/TV" "/media/md/Downloads" ];
   };
 in
 {
   virtualisation.oci-containers = {
-    backend = "docker";
+    backend = "podman";
     containers = {
       # Secret values live in root-only environment files, never in the Nix store.
       "authentik-server-1" = {
@@ -77,7 +64,7 @@ in
           "COMPOSE_PORT_HTTPS" = "9143";
         };
         environmentFiles = [ "/var/lib/native-services-migration/authentik-worker-1.env" ];
-        volumes = [ "/run/postgresql:/run/postgresql:ro" "/var/run/docker.sock:/var/run/docker.sock" "/etc/docker-compose/authentik/data:/data" "/etc/docker-compose/authentik/certs:/certs" "/etc/docker-compose/authentik/custom-templates:/templates" ];
+        volumes = [ "/run/postgresql:/run/postgresql:ro" "/run/podman/podman.sock:/var/run/docker.sock" "/etc/docker-compose/authentik/data:/data" "/etc/docker-compose/authentik/certs:/certs" "/etc/docker-compose/authentik/custom-templates:/templates" ];
         networks = [ "authentik_default" ];
         cmd = [ "worker" ];
         user = "root";
@@ -136,7 +123,7 @@ in
         ports = [ "9900:80" ];
         volumes = [ "/run/postgresql:/run/postgresql:ro" "/var/www/FreshRSS:/config" "freshrss_data:/var/www/FreshRSS/data" "freshrss_extensions:/var/www/FreshRSS/extensions" ];
         networks = [ "freshrss_default" ];
-        extraOptions = [ "--network-alias=freshrss" "--add-host=host.docker.internal=host-gateway" ];
+        extraOptions = [ "--network-alias=freshrss" "--add-host=host.docker.internal:host-gateway" ];
       };
 
       "grimmory" = {
@@ -185,20 +172,6 @@ in
         extraOptions = [ "--network=host" ];
       };
 
-      "prowlarr" = {
-        image = "lscr.io/linuxserver/prowlarr:latest";
-        autoStart = true;
-        environment = {
-          "PGID" = "1000";
-          "PUID" = "1000";
-          "TZ" = "America/Chicago";
-        };
-        ports = [ "9696:9696" ];
-        volumes = [ "/var/www/Prowlarr/data:/config" ];
-        networks = [ "prowlarr_default" ];
-        extraOptions = [ "--network-alias=prowlarr" ];
-      };
-
       "radarr" = {
         image = "lscr.io/linuxserver/radarr:latest";
         autoStart = false;
@@ -231,34 +204,47 @@ in
   };
 
   systemd.services = {
-    docker-compose-resources = {
-      description = "Create Docker networks and reuse Compose data volumes";
-      requires = [ "docker.service" ];
-      after = [ "docker.service" ];
+    podman-container-resources = {
+      description = "Create Podman container networks";
+      requires = [ "podman.socket" ];
+      after = [ "podman.socket" ];
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
       };
       script = ''
         set -euo pipefail
-        ${lib.concatStringsSep "\n" (lib.mapAttrsToList (name: driver: ''
-          if ! ${docker} network ls --format '{{.Name}}' | ${pkgs.gnugrep}/bin/grep -Fx -- ${lib.escapeShellArg name} > /dev/null; then
-            ${docker} network create --driver ${lib.escapeShellArg driver} ${lib.escapeShellArg name}
+        if [ ! -f /var/lib/podman-container-migration/ready ]; then
+          echo "Podman migration has not been prepared; refusing to start application containers" >&2
+          exit 1
+        fi
+        for volume in freshrss_data freshrss_extensions; do
+          if ! ${podman} volume exists "$volume"; then
+            echo "Missing migrated Podman volume: $volume" >&2
+            exit 1
+          fi
+        done
+        ${lib.concatStringsSep "\n" (lib.mapAttrsToList (name: subnet: ''
+          if ${podman} network exists ${lib.escapeShellArg name}; then
+            ${podman} network inspect ${lib.escapeShellArg name} | ${pkgs.jq}/bin/jq -e \
+              --arg subnet ${lib.escapeShellArg subnet} '.[0].dns_enabled == true and ([.[0].subnets[].subnet] == [$subnet])' >/dev/null
+          else
+            status=$?
+            if [ "$status" -ne 1 ]; then
+              echo "Cannot check Podman network ${name}: $status" >&2
+              exit "$status"
+            fi
+            ${podman} network create --subnet ${lib.escapeShellArg subnet} ${lib.escapeShellArg name}
           fi
         '') networks)}
-        ${lib.concatStringsSep "\n" (lib.mapAttrsToList (name: driver: ''
-          if ! ${docker} volume ls --format '{{.Name}}' | ${pkgs.gnugrep}/bin/grep -Fx -- ${lib.escapeShellArg name} > /dev/null; then
-            ${docker} volume create --driver ${lib.escapeShellArg driver} ${lib.escapeShellArg name}
-          fi
-        '') volumes)}
       '';
     };
-  } // lib.genAttrs (map (name: "docker-${name}") containerNames) (unit: let
-    name = lib.removePrefix "docker-" unit;
+  } // lib.genAttrs (map (name: "podman-${name}") containerNames) (unit: let
+    name = lib.removePrefix "podman-" unit;
     paths = bindPaths.${name} or [ ];
   in {
-    requires = [ "docker-compose-resources.service" ];
-    after = [ "docker-compose-resources.service" ];
+    requires = [ "podman-container-resources.service" ];
+    after = [ "podman-container-resources.service" ];
     unitConfig.RequiresMountsFor = paths
       ++ lib.optionals (builtins.any (path:
         path == "/media" || path == "/Books" || lib.hasPrefix "/Books/" path
@@ -283,18 +269,18 @@ in
     postStart = lib.mkIf (builtins.elem name healthyContainers) ''
       set -euo pipefail
       for attempt in $(${pkgs.coreutils}/bin/seq 1 150); do
-        id=$(${docker} container ls --all --filter ${lib.escapeShellArg "name=^/${name}$"} --format '{{.ID}}')
+        id=$(${podman} container ls --all --filter ${lib.escapeShellArg "name=^${name}$"} --format '{{.ID}}')
         if [ -z "$id" ]; then
           ${pkgs.coreutils}/bin/sleep 2
           continue
         fi
-        state=$(${docker} inspect --format '{{.State.Health.Status}}' ${lib.escapeShellArg name})
+        state=$(${podman} inspect --format '{{.State.Health.Status}}' ${lib.escapeShellArg name})
         if [ "$state" = healthy ]; then
           exit 0
         fi
         if [ "$state" = unhealthy ]; then
           echo ${lib.escapeShellArg "Container ${name} failed its health check"} >&2
-          ${docker} inspect --format '{{json .State.Health}}' ${lib.escapeShellArg name} >&2
+          ${podman} inspect --format '{{json .State.Health}}' ${lib.escapeShellArg name} >&2
           exit 1
         fi
         ${pkgs.coreutils}/bin/sleep 2

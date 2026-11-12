@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ lib, pkgs, ... }:
 
 let
   ready = "/var/lib/native-services-migration/ready";
@@ -12,40 +12,8 @@ let
     requires = [ "postgresql.target" ];
     after = [ "postgresql.target" ];
   };
-  migrate = pkgs.writeShellApplication {
-    name = "native-services-migrate";
-    runtimeInputs = [
-      pkgs.coreutils
-      pkgs.curl
-      config.virtualisation.docker.package
-      pkgs.mariadb.client
-      pkgs.nix
-      pkgs.openssh
-      pkgs.postgresql_16
-      (pkgs.python3.withPackages (ps: [ ps.pglast ]))
-      pkgs.rsync
-      pkgs.systemd
-      pkgs.util-linux
-    ];
-    text = ''
-      exec python3 ${./native-migration/migrate.py} "$@"
-    '';
-  };
-  sharedMigrate = pkgs.writeShellApplication {
-    name = "shared-mariadb-migrate";
-    runtimeInputs = [
-      pkgs.coreutils pkgs.curl config.virtualisation.docker.package pkgs.mariadb.client
-      pkgs.nix pkgs.pgloader pkgs.php pkgs.postgresql_16 pkgs.python3 pkgs.rsync
-      pkgs.systemd pkgs.util-linux
-    ];
-    text = ''
-      exec python3 ${./native-migration}/shared-mariadb.py "$@"
-    '';
-  };
 in
 {
-  environment.systemPackages = [ migrate sharedMigrate ];
-
   services.postgresql = {
     enable = true;
     package = pkgs.postgresql_16;
@@ -163,9 +131,9 @@ in
   };
   systemd.services.uwsgi = guarded [ "docker-searxng.service" ];
 
-  systemd.services.docker-authentik-server-1 = postgresClient;
-  systemd.services.docker-authentik-worker-1 = postgresClient;
-  systemd.services.docker-bitmagnet = postgresClient;
+  systemd.services.podman-authentik-server-1 = postgresClient;
+  systemd.services.podman-authentik-worker-1 = postgresClient;
+  systemd.services.podman-bitmagnet = postgresClient;
   systemd.services.postgresqlBackup-authentik.unitConfig.ConditionPathExists = ready;
   systemd.services.postgresqlBackup-bitmagnet.unitConfig.ConditionPathExists = ready;
   systemd.services.postgresqlBackup-forgejo.unitConfig.ConditionPathExists = ready;
@@ -173,7 +141,7 @@ in
     "/var/lib/shared-mariadb-migration/ready";
   systemd.services.postgresqlBackup-pelican.unitConfig.ConditionPathExists =
     "/var/lib/shared-mariadb-migration/ready";
-  systemd.services.docker-freshrss = {
+  systemd.services.podman-freshrss = {
     unitConfig.ConditionPathExists = "/var/lib/shared-mariadb-migration/ready";
     requires = [ "postgresql.target" ];
     after = [ "postgresql.target" ];

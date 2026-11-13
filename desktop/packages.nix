@@ -29,6 +29,7 @@ in
     duf
     dust
     efibootmgr
+    eza
     fd
     ffmpeg
     firefox
@@ -59,7 +60,6 @@ in
     libargon2
     libinput
     libsecret
-    lsd
     lunar-client
     fastfetch
     nh

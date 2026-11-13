@@ -22,6 +22,7 @@ in
     duf
     dust
     efibootmgr
+    eza
     fuzzel
     gh
     ghostty
@@ -44,8 +45,7 @@ in
     libargon2
     libinput
     libsecret
-    lsd
-    fastfetch
+        fastfetch
     nh
     nix-direnv
     nix-tree

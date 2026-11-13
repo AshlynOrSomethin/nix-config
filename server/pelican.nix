@@ -1,4 +1,58 @@
 { inputs, config, lib, pkgs, ... }:
+let
+  panel = config.services.pelican-panel;
+  panelPackage = inputs.pelican-panel.packages.${pkgs.stdenv.hostPlatform.system}.pelican-panel;
+  panelTools = [
+    pkgs.yarn
+    pkgs.nodejs
+    pkgs.php
+    pkgs.php.packages.composer
+    pkgs.git
+    pkgs.unzip
+    pkgs.coreutils
+    pkgs.findutils
+    pkgs.gnugrep
+    pkgs.gnused
+  ];
+  panelPath = lib.makeBinPath panelTools;
+  panelHome = "${panel.runtimeLocation}/storage";
+  # Pelican builds theme assets at runtime; preserve them between deployments.
+  rebuildPanelAssets = pkgs.writeShellScript "pelican-panel-rebuild-assets" ''
+    set -euo pipefail
+    cd ${lib.escapeShellArg (toString panel.runtimeLocation)}
+    yarn install --non-interactive
+    yarn build
+  '';
+  deployPanel = pkgs.writeShellScript "pelican-panel-deploy" ''
+    set -euo pipefail
+    runtime=${lib.escapeShellArg (toString panel.runtimeLocation)}
+    source=${lib.escapeShellArg "${panelPackage}/share/php/pelican-panel"}
+    marker="$runtime/storage/.deployed-panel-package"
+
+    ${pkgs.coreutils}/bin/mkdir -p "$runtime"/{bootstrap/cache,storage/app/private,storage/app/public,storage/framework/cache,storage/framework/sessions,storage/framework/testing,storage/framework/views,storage/logs,public/build,plugins}
+    ${pkgs.rsync}/bin/rsync -a --delete \
+      --exclude='/.env' --exclude='/storage' --exclude='/database/database.sqlite' \
+      --exclude='/plugins' --exclude='/node_modules' --exclude='/public/build' \
+      "$source/" "$runtime/"
+    ${pkgs.coreutils}/bin/chown -R ${lib.escapeShellArg "${panel.user}:${panel.group}"} "$runtime"
+    ${pkgs.coreutils}/bin/chmod -R 755 "$runtime"
+    HOME=/tmp COMPOSER_HOME=/tmp ${pkgs.php.packages.composer}/bin/composer dump-autoload --working-dir="$runtime" --no-interaction
+
+    if [ ! -f "$marker" ] || [ "$(< "$marker")" != "$source" ] || [ ! -f "$runtime/public/build/manifest.json" ]; then
+      if [ -n "$(${pkgs.findutils}/bin/find "$runtime/plugins" -mindepth 1 -maxdepth 1 -type d -print -quit)" ]; then
+        ${pkgs.util-linux}/bin/runuser -u ${lib.escapeShellArg panel.user} -- \
+          ${pkgs.coreutils}/bin/env HOME=${lib.escapeShellArg panelHome} PATH=${lib.escapeShellArg panelPath} \
+          ${rebuildPanelAssets}
+      else
+        ${pkgs.rsync}/bin/rsync -a --checksum --delete "$source/public/build/" "$runtime/public/build/"
+        ${pkgs.coreutils}/bin/chown -R ${lib.escapeShellArg "${panel.user}:${panel.group}"} "$runtime/public/build"
+        ${pkgs.coreutils}/bin/chmod -R 755 "$runtime/public/build"
+      fi
+      printf '%s\n' "$source" > "$marker"
+      ${pkgs.coreutils}/bin/chown ${lib.escapeShellArg "${panel.user}:${panel.group}"} "$marker"
+    fi
+  '';
+in
 {
   imports = [
     inputs.pelican-panel.nixosModules.wings
@@ -10,6 +64,10 @@
     nginx.enable = true;
   };
 
+  services.phpfpm.pools.${panel.phpfpm.poolName}.phpEnv = {
+    HOME = panelHome;
+    PATH = panelPath;
+  };
 
   services.wings = {
     enable = true;
@@ -31,7 +89,16 @@
     };
   };
 
-  systemd.services = {
+  systemd.services = lib.mkMerge [ {
+    pelican-panel-deploy = {
+      wants = [ "network-online.target" ];
+      after = [ "network-online.target" ];
+      serviceConfig.ExecStart = lib.mkForce [ "${deployPanel}" ];
+    };
+    pelican-panel-queue = {
+      path = panelTools;
+      environment.HOME = panelHome;
+    };
     podman-pelican-network = {
       description = "Create the Podman network for Wings";
       requires = [ "podman.socket" ];
@@ -69,14 +136,14 @@
       after = [ "podman-pelican-network.service" ];
       serviceConfig.SupplementaryGroups = [ "nginx" ];
     };
-  } // lib.genAttrs [
+  } (lib.genAttrs [
     "pelican-panel-deploy" "pelican-panel-upgrade" "pelican-panel-queue"
     "pelican-panel-schedule" "phpfpm-pelican-panel"
   ] (_: {
     unitConfig.ConditionPathExists = "/var/lib/shared-mariadb-migration/ready";
     requires = [ "postgresql.target" ];
     after = [ "postgresql.target" ];
-  });
+  })) ];
 
   # upstream module sets this group on the user but never declares it
   users.groups.pelican-panel = {};

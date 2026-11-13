@@ -64,10 +64,10 @@
       "pulsar" = "ssh ashlyn@pulsar.ltd";
 
       # --- Drop-in replacements ---
-      ls = "lsd";
-      ll = "lsd -l";
-      la = "lsd -la";
-      lt = "lsd --tree";
+      ls = "eza";
+      ll = "eza -l";
+      la = "eza -la";
+      lt = "eza --tree";
       du = "dust";
       df = "duf";
       top = "btop";

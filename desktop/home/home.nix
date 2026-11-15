@@ -24,6 +24,27 @@
         };
       };
 
+      output = {
+        "DVI-D-1" = {
+          mode = "1280x1024@60.020";
+          position = [ 0 0 ];
+        };
+        "DP-3" = {
+          mode = "1920x1080@60.000";
+          position = [ 1280 420 ];
+          transform = "90";
+        };
+        "HDMI-A-1" = {
+          mode = "1920x1080@164.990";
+          position = [ 2360 1024 ];
+          focus_at_startup = true;
+        };
+        "HDMI-A-2" = {
+          mode = "1360x768@60.015";
+          position = [ 4280 1336 ];
+        };
+      };
+
       input.cursor = {
         theme = "Breeze-Adapta-Cursor";
         size = 20;

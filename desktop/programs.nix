@@ -17,6 +17,9 @@
   };
   programs.dux-search.enable = true;
   programs.dux-search.systemd.enable = true;
+
+  # Serve file open/save dialogs with dux-files under umbriel
+  xdg.portal.config.umbriel."org.freedesktop.impl.portal.FileChooser" = [ "dfiles" ];
     
   programs.nix-ld.enable = true;
   

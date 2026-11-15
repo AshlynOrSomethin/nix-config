@@ -3,12 +3,9 @@
     ../shared
     ../shared/puressh.nix
     ./hardware-configuration.nix
-    ./system.nix
     ./boot.nix
-    ./network.nix
     ./services.nix
     ./packages.nix
-    ./programs.nix
     ./prores.nix
     ./home/gaming.nix
     ./shells.nix

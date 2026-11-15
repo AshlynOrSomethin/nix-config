@@ -45,11 +45,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1794731398,
-        "narHash": "sha256-CFYFtQWT8FJfTWyibhIXv023+gtJb2Wgw3eEyk4CrJk=",
+        "lastModified": 1794764381,
+        "narHash": "sha256-FPRMKA/DzIQPzUdI+N4EnS1WMaMXdY5aBwlT+utBwUg=",
         "owner": "chaotic-cx",
         "repo": "nyx",
-        "rev": "dac776f12cfef768844b3f4c661873c6e3579178",
+        "rev": "0e19cd55ce89d11e0987a5ef50c6ad0a36b8cc35",
         "type": "github"
       },
       "original": {
@@ -512,11 +512,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1794278858,
-        "narHash": "sha256-rkrJwLgLSHBnXfgoSKIDa+2LLGdTqynsV3GAxOTGhUU=",
+        "lastModified": 1794715309,
+        "narHash": "sha256-awkBBs5ctFKgEYjpNGpi3t/VqF589n5EWfdinRb2gNI=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "82ce401aa350502897c3f2e85f384d61cd3b0b6d",
+        "rev": "a1293da7dd8e497e08d26173f97e2976b36a31ea",
         "type": "github"
       },
       "original": {
@@ -669,11 +669,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1794386569,
-        "narHash": "sha256-W60urNAgQVS8bhNWH0bQsYoiagds8m38oTDUjEOM9FE=",
-        "rev": "d4f25a3e562008648d45bcf2d70bcc7422cad84e",
+        "lastModified": 1794537146,
+        "narHash": "sha256-bTKSclXJAmo9qdxPedTBHUGr8awPr4BrbOoOutJsYIc=",
+        "rev": "d5cc6833999746cffdfe0598f7bc801a57b887a9",
         "type": "tarball",
-        "url": "https://releases.nixos.org/nixos/unstable/nixos-26.11pre1117658.d4f25a3e5620/nixexprs.tar.zst"
+        "url": "https://releases.nixos.org/nixos/unstable/nixos-26.11pre1119549.d5cc68339997/nixexprs.tar.zst"
       },
       "original": {
         "type": "tarball",
@@ -1042,11 +1042,11 @@
     "satty": {
       "flake": false,
       "locked": {
-        "lastModified": 1794735355,
-        "narHash": "sha256-l7j+ul7mLqPw195zNv2RU52e70nGBEoUjsq7TDZG/Sc=",
+        "lastModified": 1794763660,
+        "narHash": "sha256-r5PMMmoK7Ol+B5YITfVGpi3a77eVB/hbCwF5AIQO2Rc=",
         "owner": "Satty-org",
         "repo": "Satty",
-        "rev": "cc1583ec76d8de9da8a07486782466ee75cfd507",
+        "rev": "01a3502c055d17d874f1879ce624f325f7f34fe0",
         "type": "github"
       },
       "original": {

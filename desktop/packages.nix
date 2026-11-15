@@ -16,6 +16,33 @@ let
   ]);
 in
 {
+  programs.qylock = {
+    enable = true;
+    theme = "pixel-night-city";
+    quickshell.enable = false;
+  };
+
+  # programs.niri.enable = true;
+  # programs.niri.package = inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri;
+  programs.umbriel.enable = true;
+  programs.dank-material-shell = {
+    enable = true;
+    enableCalendarEvents = false;
+    systemd.enable = true;
+  };
+  programs.dux-search.enable = true;
+  programs.dux-search.systemd.enable = true;
+
+  # Serve file open/save dialogs with dux-files under umbriel
+  xdg.portal.config.umbriel."org.freedesktop.impl.portal.FileChooser" = [ "dfiles" ];
+
+  programs.nix-ld.enable = true;
+
+  programs.gnupg.agent = {
+    enable = true;
+    pinentryPackage = pkgs.pinentry-gnome3;
+  };
+
   environment.systemPackages = with pkgs; [
     atuin
     bat

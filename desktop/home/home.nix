@@ -4,7 +4,7 @@
   imports = [
       ./zshrc.nix
       ./sops.nix
-      # ../niri.nix
+      # ./niri.nix
       ./umbriel.nix
       ./mimeapps.nix
       ./ghostty.nix

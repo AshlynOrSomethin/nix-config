@@ -150,7 +150,7 @@
 
           nix flake update &&
           jj commit -m 'Update NixOS configuration' &&
-          nh os switch /etc/nixos --hostname desktop --log-format internal-json -v &&
+          nh os switch /etc/nixos --hostname desktop --log-format internal-json &&
           jj bookmark set main -r @- &&
           jj push --remote origin --bookmark main
       )

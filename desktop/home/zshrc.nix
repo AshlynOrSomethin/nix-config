@@ -151,7 +151,7 @@
           nix flake update &&
           jj commit -m 'Update NixOS configuration' &&
           sudo -v &&
-          sudo --preserve-env=NIX_CONFIG nixos-rebuild switch --flake /etc/nixos#desktop --log-format internal-json -v 2>&1 | nom --json &&
+          sudo --preserve-env=NIX_CONFIG nh os switch /etc/nixos --hostname desktop --log-format internal-json -v &&
           jj bookmark set main -r @- &&
           jj push --remote origin --bookmark main
       )

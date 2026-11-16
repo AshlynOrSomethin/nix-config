@@ -1,4 +1,4 @@
-{ inputs, config, lib, pkgs, ... }:
+{ inputs, config, lib, pkgs, modulesPath, ... }:
 let
   panel = config.services.pelican-panel;
   panelPackage = inputs.pelican-panel.packages.${pkgs.stdenv.hostPlatform.system}.pelican-panel;
@@ -54,7 +54,18 @@ let
   '';
 in
 {
+  # Keep the existing deployment module; nixpkgs now provides an incompatible one.
+  disabledModules = [ "services/misc/pelican-panel.nix" ];
+
   imports = [
+    # Preserve the nixpkgs manual chapter referenced by its redirects.
+    {
+      _file = "pelican-panel.nix";
+      meta.doc = builtins.path {
+        path = modulesPath + "/services/misc/pelican-panel.md";
+        name = "pelican-panel.md";
+      };
+    }
     inputs.pelican-panel.nixosModules.wings
     inputs.pelican-panel.nixosModules.pelican-panel
   ];

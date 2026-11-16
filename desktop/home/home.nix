@@ -23,6 +23,7 @@
     bitwarden-desktop
     pear-desktop
     peazip
+    pavucontrol
     pipeweaver
     proton-cachyos_x86_64_v3
     qbittorrent

@@ -69,5 +69,6 @@ in
     xwayland-satellite
     yarn
     zoxide
+    zulu25
   ];
 }

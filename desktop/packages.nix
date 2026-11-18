@@ -118,5 +118,6 @@ in
     xwayland-satellite
     zellij
     zoxide
+    zulu25
   ];
 }

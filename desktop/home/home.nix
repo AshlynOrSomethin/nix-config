@@ -25,7 +25,6 @@
     peazip
     pavucontrol
     pipeweaver
-    proton-cachyos_x86_64_v3
     qbittorrent
     vesktop
     wineWow64Packages.fonts
